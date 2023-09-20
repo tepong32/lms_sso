@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     ### third-party packages ###
     'django_sso.sso_gateway',
+    'django_sso.sso_service',
     'oauth2_provider',
 ]
 
@@ -159,32 +160,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ######### settings for django-sso
 # SSO settings section in the gateway side are optional
 SSO = {
-    # Timeout for the communication with subordinated services. (OPTIONAL)
-    # This timeout is defined in seconds with a default value of 0.1s 
-    # (100ms) per registered service.
-    'SUBORDINATE_COMMUNICATION_TIMEOUT': 0.1,
+    # Specify SSO server base url (REQUIRED)
+    'ROOT': 'https://sso.project.test',
     
-    # Additional fields. (OPTIONAL). For more details look to part
-    # named as "Send additional data to subordinated services"
-    # 'ADDITIONAL_FIELDS': ('additiona_fields', 'from_user_model', 'and_related_models'),
+	# Specify application token obtained in the SSO server admin panel (REQUIRED)
+	'TOKEN': 'zreyI2XpfdiLoeoZCEbaYOTcZK8EvqKbNCo3hSbLhJs4FC2yeWiAjFsHuFDe8J7COzNC13Uftbkww1xwmeQQN5sTTEYQcpgafHmMScSy1ktSTottC4KEgUXWa6E8Viz2',
+ 	
+    # Overriding event acceptor class (OPTIONAL). For more details read
+    # "Overriding event acceptor in subordinated service" partition
+    # 'EVENT_ACCEPTOR_CLASS': 'project.my_overrides.MySSOEventAcceptor'
 }
 
 
 # Affects to the "welcome" url (after successful authentication) when
 # user logged in but don't have url to redirect. Optional.
 # Compatible logic with Django.
-LOGIN_REDIRECT_URL = '/default/url/'
-LOGIN_URL='/admin/login/'
+LOGIN_REDIRECT_URL = 'home/' # set this as the go-to page after successful login
+LOGIN_URL = '/login/'
 
 AUTHENTICATION_CLASSES = (
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
-
-# Configure OAuth provider settings (e.g., client ID and secret)
-OAUTH2_PROVIDER = {
-    'client_id': '960711795493-9vsgskaeg1qk3nc74qp27s9e7uoejitq.apps.googleusercontent.com',
-    'secret': '0-tHwlg4jvax1jt7p-JnvBmj',
-    'ACCESS_TOKEN_EXPIRE_SECONDS': 36000,
-    'AUTHORIZATION_CODE_EXPIRE_SECONDS': 36000,
-}
