@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     ### admin-created apps ###
+    'home',
     'users',
 
     ### third-party packages ###
@@ -175,10 +176,6 @@ SSO = {
 # Affects to the "welcome" url (after successful authentication) when
 # user logged in but don't have url to redirect. Optional.
 # Compatible logic with Django.
-LOGIN_REDIRECT_URL = 'home/' # set this as the go-to page after successful login
-LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/home/' # set this as the go-to page after successful login
+LOGIN_URL = 'login/'
 
-AUTHENTICATION_CLASSES = (
-    'oauth2_provider.middleware.OAuth2TokenMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-)

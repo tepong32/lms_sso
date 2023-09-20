@@ -21,7 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')), # this is for oauth2 provider
     path('', include('django_sso.sso_gateway.urls')), # this is for django-sso
-    path('', include('django_sso.sso_service.urls')), 
+    path('', include('django_sso.sso_service.urls')),
+    path('home/', include('home.urls')),
     path('users/', include('users.urls')),
 
 ]
