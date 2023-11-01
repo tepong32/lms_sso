@@ -1,0 +1,12 @@
+notes:
+
+home:
+	separated views for auth'ed and unauth'ed users implemented (well, not really...yet)
+
+
+
+	
+
+users:
+	custom user to meet Marlon's sign-in requirement partially met. :)
+	hierarchichal structure needs to be determined then implement is_staff status + restrictions
