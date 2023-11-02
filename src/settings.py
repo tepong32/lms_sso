@@ -31,6 +31,12 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    ### third-party packages ###
+    'allauth',
+    'adminlte3',
+    'adminlte3_theme',
+
+    ### defaults
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,17 +45,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     ### admin-created apps ###
-    'home',
-    'users',
+    'home.apps.HomeConfig',
+    'users.apps.UsersConfig',
 
-    ### third-party packages ###
-    'django_sso.sso_gateway',
-    'django_sso.sso_service',
-    'oauth2_provider',
+    
 ]
 
 ### some defaults to make the project work ###
 SITE_ID = 1
+### this next line is needed for custom user models to work on django
+### see https://www.youtube.com/watch?v=mndLkCEiflg 1:30 mark
 AUTH_USER_MODEL='users.User'
 
 
@@ -157,25 +162,8 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER # for email-sending pw-reset requests
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-
-######### settings for django-sso
-# SSO settings section in the gateway side are optional
-SSO = {
-    # Specify SSO server base url (REQUIRED)
-    'ROOT': 'https://sso.project.test',
-    
-	# Specify application token obtained in the SSO server admin panel (REQUIRED)
-	'TOKEN': 'zreyI2XpfdiLoeoZCEbaYOTcZK8EvqKbNCo3hSbLhJs4FC2yeWiAjFsHuFDe8J7COzNC13Uftbkww1xwmeQQN5sTTEYQcpgafHmMScSy1ktSTottC4KEgUXWa6E8Viz2',
- 	
-    # Overriding event acceptor class (OPTIONAL). For more details read
-    # "Overriding event acceptor in subordinated service" partition
-    # 'EVENT_ACCEPTOR_CLASS': 'project.my_overrides.MySSOEventAcceptor'
-}
-
-
 # Affects to the "welcome" url (after successful authentication) when
 # user logged in but don't have url to redirect. Optional.
 # Compatible logic with Django.
 LOGIN_REDIRECT_URL = '/home/' # set this as the go-to page after successful login
 LOGIN_URL = 'login/'
-

@@ -1,0 +1,25 @@
+
+***USERS APP***
+user types:
+ Line Mgr
+ Dept Mgr
+ TL
+ Agent
+
+status types: (status ng ano to? employment?)
+xxx
+xxx
+
+GCB level: (ano din to? sahod?)
+xxx
+xxx
+
+hire date (can be defined with wave#s or batch#s instead of manually entering specific dates para mai-group ang Agents):
+xxx
+xxx
+
+work group types: (i think we can set defaults tied to user types?)
+xxx
+xxx
+
+

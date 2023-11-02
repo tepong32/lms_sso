@@ -8,5 +8,9 @@ home:
 	
 
 users:
-	custom user to meet Marlon's sign-in requirement partially met. :)
+	set account identifier as staff_id
+	working CRUD pages for users' profile info
+	Marlon's custom user requirement partially met. :)
+
+	to-dos:
 	hierarchichal structure needs to be determined then implement is_staff status + restrictions

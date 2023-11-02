@@ -5,4 +5,4 @@ from users.models import User
 def homeView(request):
     user = User
     context = {}
-    return render(request, 'home.html', context)
+    return render(request, 'home/authed/home.html', context)
