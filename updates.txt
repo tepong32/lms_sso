@@ -11,6 +11,7 @@ users:
 	set account identifier as staff_id
 	working CRUD pages for users' profile info
 	Marlon's custom user requirement partially met. :)
+	EmployeeClassification linked to Profile model successfully. Just remove/comment-out "classification" attr on Profile model prior to 1st migration, create the default instance of EmployeeClassification and then restore "classification" attr
 
 	to-dos:
 	hierarchichal structure needs to be determined then implement is_staff status + restrictions

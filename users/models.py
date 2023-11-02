@@ -92,6 +92,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return str(self.staff_id)
 
 
+class EmployeeClassification(models.Model):
+    '''
+        What are the user types of the app?
+        Default will be Agent but admin can set it to whatever is needed.
+        Just add instances of this class and they will be fetched as options for the "classification" attr of the Profile class.
+    '''
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) # if the user is deleted, the profile will be deleted, too
@@ -100,6 +111,9 @@ class Profile(models.Model):
     middle_name         = models.CharField(max_length=50, blank=True)
     last_name           = models.CharField(max_length=50, blank=True)
     ext_name            = models.CharField(max_length=3, blank=True)
+    ### determining user class
+    classification = models.ForeignKey(EmployeeClassification, null=True, on_delete=models.SET_NULL)
+
     Dept01 = "Department 01"
     Dept02 = "Department 02"
     Dept03 = "Department 03"

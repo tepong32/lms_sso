@@ -39,7 +39,7 @@ def register(request):
 @login_required
 def profileView(request, staff_id=None):
     if User.objects.get(staff_id=staff_id):
-        user = str(User.objects.get(staff_id=staff_id))
+        user = User.objects.get(staff_id=staff_id)
         return render(request, 'users/profile.html',
             {
                 "user": user,
@@ -53,7 +53,7 @@ def profileView(request, staff_id=None):
 @login_required
 def profileEditView(request, staff_id=None):
     if User.objects.get(staff_id=staff_id):
-        user = str(User.objects.get(staff_id=staff_id))
+        user = User.objects.get(staff_id=staff_id)
         if request.method == 'POST':    # for the new info to be saved, this if block is needed
             # the forms from forms.py
             u_form = UserUpdateForm(request.POST, instance=request.user)        # instance is for the fields to auto-populate with user info
