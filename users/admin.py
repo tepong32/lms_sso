@@ -3,16 +3,17 @@
 # from .models import User
 
 from django.contrib import admin
-from .models import User
+from .models import User, Profile
 
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('staff_id', 'first_name', 'last_name', 'is_active', 'is_staff', 'is_superuser')
+    list_display = ('staff_id', 'is_active', 'is_staff', 'is_superuser')
     
     fieldsets = (
         (None, {'fields': ('staff_id', 'password')}),
-        ('Personal Info', {'fields': ('first_name', 'last_name', 'middle_name', 'ext_name', 'email')}),
+        # ('Personal Info', {'fields': ('first_name', 'last_name', 'middle_name', 'ext_name', 'email')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         ('Important Dates', {'fields': ('last_login', 'date_joined')}),
     )
 
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(Profile)

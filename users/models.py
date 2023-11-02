@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.utils import timezone
-
+from PIL import Image
+from django.urls import reverse
 
 ### Documentation: ###
 # See: https://docs.djangoproject.com/en/4.2/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project
@@ -15,7 +16,6 @@ from django.utils import timezone
 
 
 ### for reference, follow-along: https://www.youtube.com/watch?v=mndLkCEiflg
-### NOTE: Almost everything is the same as AbstractUser aside from allowing blank=True on some fields specifically for this LMS we are working on.
 
 class CustomUserManager(UserManager):
     '''
@@ -36,7 +36,7 @@ class CustomUserManager(UserManager):
     def create_user(self, staff_id=None, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(staff_id, password, **extra_fields)
+        return self._create_user(str(staff_id), password, **extra_fields) #string-ify staff_id to avoid errors on forms when editing it in the future
 
     '''function used in cmd to create a super user'''
     def create_superuser(self, staff_id=None, password=None, **extra_fields):
@@ -59,10 +59,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     '''
     staff_id = models.PositiveIntegerField(unique=True) # change max_length if needed, add min_length/value
     email = models.EmailField(blank=True, default="") # add unique & null field options in production!
-    first_name = models.CharField(max_length=50, blank=True)
-    middle_name = models.CharField(max_length=50, blank=True)
-    last_name = models.CharField(max_length=50, blank=True)
-    ext_name = models.CharField(max_length=3, blank=True)
     
     date_joined = models.DateTimeField(default=timezone.now)
     last_login = models.DateTimeField(auto_now=True)
@@ -78,18 +74,62 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = "User"
         verbose_name_plural = 'Users'
+        
     def __str__(self):
-        return self.email
+        return str(self.staff_id)
 
-    def get_full_name(self):
-        if self.first_name and self.last_name:
-            return f"{self.first_name} {self.last_name}".strip()
-        elif self.first_name:
-            return self.first_name
-        elif self.last_name:
-            return self.last_name
-        else:
-            return "User has not provided his/her name yet."
+    # def get_full_name(self):
+    #     if self.first_name and self.last_name:
+    #         return f"{self.first_name} {self.last_name}".strip()
+    #     elif self.first_name:
+    #         return self.first_name
+    #     elif self.last_name:
+    #         return self.last_name
+    #     else:
+    #         return "User has not provided his/her name yet."
 
     def get_short_name(self):
-        return self.first_name or self.email.split('@')[0] or "User has not provided a name nor email yet."
+        return str(self.staff_id)
+
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE) # if the user is deleted, the profile will be deleted, too
+    # display_name = models.CharField(blank=True, null=True, max_length=50, unique=True, verbose_name="Display Name: ",help_text="Get a cool-sounding alias.")
+    first_name          = models.CharField(max_length=50, blank=True)
+    middle_name         = models.CharField(max_length=50, blank=True)
+    last_name           = models.CharField(max_length=50, blank=True)
+    ext_name            = models.CharField(max_length=3, blank=True)
+    Dept01 = "Department 01"
+    Dept02 = "Department 02"
+    Dept03 = "Department 03"
+    dept_choices = [
+        (Dept01, "Dept01"),
+        (Dept02, "Dept02"),
+        (Dept03, "Dept03")
+    ]
+    department          = models.CharField(
+        max_length=20,
+        choices=dept_choices,
+        default=Dept01, verbose_name="Department: "
+    )
+    
+    def dp_directory_path(instance, filename):
+        # file will be uploaded to MEDIA_ROOT/DP/<username>/<filename> ---check settings.py. MEDIA_ROOT=media for the exact folder/location
+        return 'users/{}/DP/{}'.format(instance.user.staff_id, filename)
+    image = models.ImageField(default='defaults/round.png', blank=True, upload_to=dp_directory_path, verbose_name="Profile Picture: ", help_text='Help us recognize you better. ;)')
+
+    def __str__(self):
+        return f"{self.last_name}, {self.first_name} {self.ext_name} {self.middle_name}".strip()
+
+    def get_absolute_url(self):
+        return reverse('profile', kwargs={'pk': self.pk})
+
+    def save(self, *args, **kwargs):        # for resizing/downsizing images
+        super(Profile, self).save(*args, **kwargs)
+
+        img = Image.open(self.image.path)   # open the image of the current instance
+        if img.height > 600 or img.width > 600: # for sizing-down the images to conserve memory in the server
+            output_size = (600, 600)
+            img.thumbnail(output_size)
+            img.save(self.image.path)
