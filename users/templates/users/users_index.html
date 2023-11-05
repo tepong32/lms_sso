@@ -11,11 +11,12 @@
 			{% for user in users %}
 				<a href="{% url 'profile' user.staff_id %}">{{user.staff_id}}</a> <hr>
 			{% endfor %}
-		{% else %}
-			<!-- This is already working so, good job! -->
-			<h3>Sorry, you do not have permissions to view this page.</h3>
-			<small><a href="/">Go back</a></small>
 		{% endif %}
+	{% else %}
+		<!-- This is already working so, good job! -->
+		<small class="bg-red">User is not authenticated. Please log-in to view the page.</small>
+		<h3>Sorry, you do not have permissions to view this page.</h3>
+		<small><a href="/">Go back</a></small>
 	{% endif %}
 {% endblock %}
 

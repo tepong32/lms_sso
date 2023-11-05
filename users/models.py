@@ -57,6 +57,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     '''
         the default (custom) User model the app will use 
     '''
+    objects = CustomUserManager() # settign CustomUserManager() instead of default UserManager()
+
     staff_id = models.PositiveIntegerField(unique=True) # change max_length if needed, add min_length/value
     email = models.EmailField(blank=True, default="") # add unique & null field options in production!
     
@@ -66,9 +68,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
-    objects = CustomUserManager() # set the CustomUserManager() above instead of default UserManager()
+    
 
-    USERNAME_FIELD = "staff_id" # default is "email" because of what we set on the CustomUserManager()
+    USERNAME_FIELD = "staff_id" # usually this is "email" but because of what we set on the CustomUserManager(), main identifier is staff_id
     REQUIRED_FIELDS = [] # ["email", "username", "first_name", "last_name"]
 
     class Meta:
@@ -78,41 +80,40 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return str(self.staff_id)
 
-    # def get_full_name(self):
-    #     if self.first_name and self.last_name:
-    #         return f"{self.first_name} {self.last_name}".strip()
-    #     elif self.first_name:
-    #         return self.first_name
-    #     elif self.last_name:
-    #         return self.last_name
-    #     else:
-    #         return "User has not provided his/her name yet."
-
     def get_short_name(self):
         return str(self.staff_id)
 
 
-class EmployeeClassification(models.Model):
-    '''
-        What are the user types of the app?
-        Default will be Agent but admin can set it to whatever is needed.
-        Just add instances of this class and they will be fetched as options for the "classification" attr of the Profile class.
-    '''
-    name = models.CharField(max_length=50, unique=True)
+# class EmployeeClassification(models.Model):
+#     '''
+#         What are the user types of the app?
+#         Default will be Agent but admin can set it to whatever is needed.
+#         Just add instances of this class and they will be fetched as options for the "classification" attr of the Profile class.
+#     '''
+#     name = models.CharField(max_length=50, unique=True)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE) # if the user is deleted, the profile will be deleted, too
-    # display_name = models.CharField(blank=True, null=True, max_length=50, unique=True, verbose_name="Display Name: ",help_text="Get a cool-sounding alias.")
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name          = models.CharField(max_length=50, blank=True)
     middle_name         = models.CharField(max_length=50, blank=True)
     last_name           = models.CharField(max_length=50, blank=True)
     ext_name            = models.CharField(max_length=3, blank=True)
-    ### determining user class
-    classification = models.ForeignKey(EmployeeClassification, null=True, on_delete=models.SET_NULL)
+
+
+    class Classification(models.TextChoices):
+        AGENT = "AGENT", "Agent"
+        TL = "TL", "Team Leader"
+        CM = "CM", "Cluster Mgr"
+        DM = "DM", "Department Mgr"
+        OM = "OM", "Operations Mgr"
+
+    ### determining user classification
+    classification = models.CharField(verbose_name=("User Classification: "), blank=True, max_length=80, choices=Classification.choices, default=Classification.AGENT)
+
 
     Dept01 = "Department 01"
     Dept02 = "Department 02"
@@ -122,6 +123,9 @@ class Profile(models.Model):
         (Dept02, "Dept02"),
         (Dept03, "Dept03")
     ]
+
+    ### what department they would be in
+    ### Note: Choices here were hard-coded (see above) for it's not often that new depts are created
     department          = models.CharField(
         max_length=20,
         choices=dept_choices,
