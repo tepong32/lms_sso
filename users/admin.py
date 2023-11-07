@@ -7,7 +7,7 @@ from django.db import models
 from .models import User, Profile
 
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('staff_id', 'is_active', 'is_staff', 'is_superuser',)
+    list_display = ('staff_id', 'email', 'is_active', 'is_staff', 'is_superuser',)
     
     # fieldsets = (
     #     (None, {'fields': ('staff_id', 'password')}),

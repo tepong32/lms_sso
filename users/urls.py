@@ -4,7 +4,7 @@ from .views import *
 
 ### complete this some other time ###
 urlpatterns = [
-    path('', usersIndexView, name='users-list'),
+    path('', usersIndexView, name='users-list'), # prolly needs to be a staff/admin-only view?
     path('<staff_id>/', profileView, name='profile' ),
     path('<staff_id>/edit/', profileEditView, name='profile-edit' ),
 

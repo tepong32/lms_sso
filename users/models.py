@@ -135,7 +135,7 @@ class Profile(models.Model):
     def dp_directory_path(instance, filename):
         # file will be uploaded to MEDIA_ROOT/DP/<username>/<filename> ---check settings.py. MEDIA_ROOT=media for the exact folder/location
         return 'users/{}/DP/{}'.format(instance.user.staff_id, filename)
-    image = models.ImageField(default='defaults/round.png', blank=True, upload_to=dp_directory_path, verbose_name="Profile Picture: ", help_text='Help us recognize you better. ;)')
+    image = models.ImageField(default='defaults/default_user_dp.png', blank=True, upload_to=dp_directory_path, verbose_name="Display Photo: ", help_text='Help us recognize you better. ;)')
 
     def __str__(self):
         return f"{self.last_name}, {self.first_name} {self.ext_name} {self.middle_name}".strip()

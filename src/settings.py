@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'allauth',
     'adminlte3',
     'adminlte3_theme',
+    'crispy_forms',
+    'crispy_bootstrap4',
 
     ### defaults
     'django.contrib.admin',
@@ -128,6 +130,8 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
 
 
@@ -139,14 +143,11 @@ STATIC_URL = 'static/' # or '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")     # where we want django to save uploaded files
 MEDIA_URL = 'media/' # or '/media/'
 
-### meron na nitong login settings sa ibaba. Check them out
-# LOGIN_REDIRECT_URL = 'home'     # needed for the login.html success instance
-# LOGIN_URL = 'login'             # for the @login_required decorator on user.views.profile
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com' # or only your domain name if you have your own mail server
-# EMAIL_PORT = 587 #587
-# EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com' # or only your domain name if you have your own mail server
+EMAIL_PORT = 587 #587
+EMAIL_USE_TLS = True
 
 ### TO USE THESE VARIABLES BELOW, USE ENVIRONMENT VARIABLES TO HIDE SENSITIVE INFO
 ### CHECK CoreyMs' Django TUTORIAL # 12 -- 14:20
@@ -165,5 +166,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Affects to the "welcome" url (after successful authentication) when
 # user logged in but don't have url to redirect. Optional.
 # Compatible logic with Django.
-LOGIN_REDIRECT_URL = '/home/' # set this as the go-to page after successful login
+LOGIN_REDIRECT_URL = '/' # set this as the go-to page after successful login
 LOGIN_URL = 'login/'
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'     # for the css of crispy forms
+PASSWORD_RESET_CONFIRM_TEMPLATE = '/password-reset/password-reset-confirm.html'
