@@ -18,3 +18,10 @@ users:
 
 	to-dos:
 	hierarchichal structure needs to be determined then implement is_staff status + restrictions
+
+
+
+	TIP!
+		for future projects' password-change/reset things, see: https://docs.djangoproject.com/en/4.2/topics/auth/default/#module-django.contrib.auth.views
+
+		then you can actually just go to "env/site-packages/django/contrib/auth/templates/registration/" to copy or modify the templates directly (copying preferred. why? Think about it! ;)). No need to create new ones. LOL!
