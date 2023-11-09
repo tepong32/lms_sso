@@ -10,8 +10,11 @@ home:
 users:
 	set account identifier as staff_id
 	working CRUD pages for users' profile info
+	working user registration, authentication and pw-reset-related things
 	Marlon's custom user requirement partially met. :)
-	EmployeeClassification linked to Profile model successfully. Just remove/comment-out "classification" attr on Profile model prior to 1st migration, create the default instance of EmployeeClassification and then restore "classification" attr
+		branch1: EmployeeClassification linked to Profile model successfully. Just remove/comment-out "classification" attr on Profile model prior to 1st migration, create the default instance of EmployeeClassification and then restore "classification" attr
+
+		branch2: EmployeeClassification now has a nested class for each "employee type". This is the better option, perhaps? But we will know which is better to use when it comes to linking leave types and credits to each user.
 
 	to-dos:
 	hierarchichal structure needs to be determined then implement is_staff status + restrictions
