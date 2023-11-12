@@ -1,13 +1,20 @@
 notes:
 
 home:
-	separated views for auth'ed and unauth'ed users implemented (well, not really...yet)
 
+	11/12/23
+	created Leave models automatically updating counters for yearly and quarterly limits (thank you, GPT4!)
+	admin can name/create any type of Leave (para mas madali buhay ko, ikaw na mag-create ng Leave Types mo! XD)
 
+	to=dos:
+	separated views for auth'ed and unauth'ed users / agents vs mgt team
 
 	
 
+
+
 users:
+
 	set account identifier as staff_id
 	working CRUD pages for users' profile info
 	working user registration, authentication and pw-reset-related things
@@ -18,6 +25,12 @@ users:
 
 	to-dos:
 	hierarchichal structure needs to be determined then implement is_staff status + restrictions
+
+
+
+
+
+
 
 
 
