@@ -35,9 +35,13 @@ class Leave(models.Model):
             leave_counter.save()
 
 class LeaveCounter(models.Model):
+    '''
+        This counts and limits the approved leaves of each user.
+        We may need to change the values used as hours instead of # of days to incorporate accrueable leave credits
+    '''
     employee = models.OneToOneField(User, on_delete=models.CASCADE)
     total_instances_per_year = models.PositiveIntegerField(default=25)
-    total_approved_per_quarter = models.PositiveIntegerField(default=8)
+    total_approved_per_quarter = models.PositiveIntegerField(default=6)
     instances_used_this_year = models.PositiveIntegerField(default=0)
     instances_used_this_quarter = models.PositiveIntegerField(default=0)
     last_year_reset_date = models.DateField(null=True, blank=True)

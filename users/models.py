@@ -107,8 +107,6 @@ class Profile(models.Model):
     class Classification(models.TextChoices):
         AGENT = "AGENT", "Agent"
         TL = "TL", "Team Leader"
-        CM = "CM", "Cluster Mgr"
-        DM = "DM", "Department Mgr"
         OM = "OM", "Operations Mgr"
 
     ### determining user classification
