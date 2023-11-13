@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0vk4l*&cp2o_o76!h&szpw$8+$yvba^9h*bvtc0_=8=079oj9v'
+SECRET_KEY = os.environ.get('SKEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -152,8 +152,8 @@ EMAIL_USE_TLS = True
 
 ### TO USE THESE VARIABLES BELOW, USE ENVIRONMENT VARIABLES TO HIDE SENSITIVE INFO
 ### CHECK CoreyMs' Django TUTORIAL # 12 -- 14:20
-EMAIL_HOST_USER = "noreply.thehideout@gmail.com"                      #os.environ.get('ADMIN_EMAIL_UN') # var for email username
-EMAIL_HOST_PASSWORD = "owuomarseizfoncd"                                  #os.environ.get('ADMIN_EMAIL_PW') # var for email pw
+EMAIL_HOST_USER = os.environ.get('ADMIN_EMAIL') # var for email username
+EMAIL_HOST_PASSWORD = os.environ.get('ADMIN_EMAIL_PW') # var for email pw
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER # for email-sending pw-reset requests
 
 
