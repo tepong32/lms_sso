@@ -7,14 +7,14 @@ from django.db import models
 from .models import User, Profile, EmployeeClassification
 
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('staff_id', 'is_active', 'is_staff', 'is_superuser')
-    
+    list_display = ('staff_id', 'is_active', 'is_staff', 'is_superuser','last_login', 'date_joined')
     fieldsets = (
         (None, {'fields': ('staff_id', 'password')}),
+        ### these were removed because they're not attribute fields of Custom User
         # ('Personal Info', {'fields': ('first_name', 'last_name', 'middle_name', 'ext_name', 'email')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
-        ('Important Dates', {'fields': ('last_login', 'date_joined')}),
     )
+    
 
 
 class EmployeeClassificationAdmin(admin.ModelAdmin):
