@@ -2,11 +2,14 @@ asgiref==3.7.2
 certifi==2023.7.22
 cffi==1.16.0
 charset-normalizer==3.3.1
+crispy-bootstrap4==2023.1
 cryptography==41.0.5
 defusedxml==0.7.1
 Django==4.2.6
 django-adminlte3==0.1.6
 django-allauth==0.58.0
+django-crispy-forms==2.1
+django-jazzmin==2.6.0
 django-markdown==0.8.4
 djangorestframework==3.14.0
 idna==3.4

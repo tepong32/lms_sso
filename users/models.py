@@ -78,27 +78,32 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return str(self.staff_id)
 
-    # def get_full_name(self):
-    #     if self.first_name and self.last_name:
-    #         return f"{self.first_name} {self.last_name}".strip()
-    #     elif self.first_name:
-    #         return self.first_name
-    #     elif self.last_name:
-    #         return self.last_name
-    #     else:
-    #         return "User has not provided his/her name yet."
-
     def get_short_name(self):
         return str(self.staff_id)
 
 
 
-### creating classes that will work as ForeignKey options to the Profile class ###
+##### creating classes that will work as ForeignKey options to the Profile class #####
+class EmployeeType(models.Model):
+    ### sampling manual entry options (use admin interface)
+    class Type(models.TextChoices):
+        ### modify these options in forms.py: THIS SHOULD NOT BE EDITABLE BY USERS
+        ADVISOR = "Advisor"
+        TEAMLEADER = "Team Leader"
+        OPSMGR = "Operations Manager"
+
+    name = models.CharField(verbose_name=("Employee Type: "), max_length=80, choices=Type.choices, default=Type.ADVISOR, editable=False) # editable=False should not allow users to edit this name attr
+
+    class Meta:
+        verbose_name_plural = "Employee Types"
+
+    def __str__(self):
+        return f"{self.name}".strip()
+
 
 class WorkGroup(models.Model):
-    ### sampling fixed options (use admin interface)
-    ### we can use manual entries but linkings may be more difficult to implement?
-    class Classification(models.TextChoices):
+    class Type(models.TextChoices):
+        ### apply if-statements below
         FST     = "FST"
         AUH     = "AUH"
         ASP     = "ASP"
@@ -107,54 +112,36 @@ class WorkGroup(models.Model):
         US      = "US"
         CANADA  = "CANADA"
 
-    classification = models.CharField(verbose_name=("Workgroup: "), blank=True, max_length=80, choices=Classification.choices, default=Classification.US)
+    name = models.CharField(verbose_name=("Workgroup: "), blank=True, max_length=80, choices=Type.choices, default=Type.US)
+
+    class Meta:
+        verbose_name_plural = "Workgroups"
 
     def __str__(self):
-        return self.classification
-
-
-class EmployeeClassification(models.Model):
-    ### sampling manual entry options (use admin interface)
-    name = models.CharField(max_length=50, unique=True)
-
-    def __str__(self):
-        return self.name
+        return f"{self.name}".strip()
 
 
 class Profile(models.Model):
     user                = models.OneToOneField(User, on_delete=models.CASCADE)
+    ### determining user's class
+    emp_type            = models.ForeignKey(EmployeeType, null=True, blank=True, on_delete=models.SET_NULL,
+        default=EmployeeType.Type.ADVISOR)
+    ### determining user's workgroup
+    workgroup           = models.ForeignKey(WorkGroup, null=True, blank=True, on_delete=models.SET_NULL,
+        default=WorkGroup.Type.US)
+
     first_name          = models.CharField(max_length=50, blank=True)
     middle_name         = models.CharField(max_length=50, blank=True)
     last_name           = models.CharField(max_length=50, blank=True)
-    ext_name            = models.CharField(max_length=3, blank=True)
-    ### determining user class
-    classification      = models.ForeignKey(EmployeeClassification, null=True, on_delete=models.SET_NULL)
-    ### determining user's workgroup
-    workgroup           = models.ForeignKey(WorkGroup, null=True, on_delete=models.SET_NULL)
-    ### adding logic for certain employee classification
-    # if self.classification == "OM"
-
-    Dept01              = "Department 01"
-    Dept02              = "Department 02"
-    Dept03              = "Department 03"
-    dept_choices        = [
-        (Dept01, "Dept01"),
-        (Dept02, "Dept02"),
-        (Dept03, "Dept03")
-    ]
-    department          = models.CharField(
-        max_length=20,
-        choices=dept_choices,
-        default=Dept01, verbose_name="Department: "
-    )
+    ext_name            = models.CharField(max_length=3, blank=True, verbose_name="Extension")
     
     def dp_directory_path(instance, filename):
         # file will be uploaded to MEDIA_ROOT/DP/<username>/<filename> ---check settings.py. MEDIA_ROOT=media for the exact folder/location
         return 'users/{}/DP/{}'.format(instance.user.staff_id, filename)
-    image = models.ImageField(default='defaults/round.png', blank=True, upload_to=dp_directory_path, verbose_name="Profile Picture: ", help_text='Help us recognize you better. ;)')
+    image = models.ImageField(default='defaults/round.png', blank=True, upload_to=dp_directory_path, verbose_name="Photo")
 
     def __str__(self):
-        return f"{self.last_name}, {self.first_name} {self.ext_name} {self.middle_name}".strip()
+        return f"{self.last_name}, {self.first_name} {self.ext_name}, {self.middle_name}".strip()
 
     def get_absolute_url(self):
         return reverse('profile', kwargs={'pk': self.pk})

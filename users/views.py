@@ -79,3 +79,17 @@ def profileEditView(request, staff_id=None):
         return render ("User not found.")
 
 
+# accounts/users searching view
+def user_search_view(request, *args, **kwargs):
+    context = {}
+    if request.method == "GET":
+        search_query = request.GET.get("q")
+        if len(search_query) > 0:
+            search_results = User.objects.filter(staff_id__icontains=search_query).filter(email__icontains=search_query).distinct()
+            user = request.user
+            accounts = [] # [(account1, True), (account2, False), ...]
+            for account in search_results:
+                accounts.append((account, False)) # you have no friends yet
+            context['accounts'] = accounts
+                
+    return render(request, "users/user_search_results.html", context)

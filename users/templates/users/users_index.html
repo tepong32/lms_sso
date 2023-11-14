@@ -5,17 +5,23 @@
 		{% if user.is_staff == True %}
 		<!-- show the list of all users if user is staff/admin -->
 		<small class="bg-green">user is authenticated</small> <br>
-			Welcome back, <b>{{request.user.staff_id}}!</b> >.<, <br>
+			Welcome back, <b>{{request.user.staff_id}}!</b> <br>
 			<hr>
-			<h3>Users List</h3>
-			{% for user in users %}
-				<a href="{% url 'profile' user.staff_id %}">{{user.staff_id}}</a> <hr>
-			{% endfor %}
-		{% else %}
-			<!-- This is already working so, good job! -->
-			<h3>Sorry, you do not have permissions to view this page.</h3>
-			<small><a href="/">Go back</a></small>
+			<div class="card">
+				<h3>Users List</h3>
+				{% for user in users %}
+					<a href="{% url 'profile' user.staff_id %}">{{user.staff_id}}</a> <hr>
+				{% endfor %}
+				listing all the users <br>
+				can be modified to just show who's under who. Like a Manager's views or something  (we'll need to modify url routing for that)<br>
+				for now, let's leave this as is. We'll figure-out what to display once everything's working as intended <br>
+			</div>
 		{% endif %}
+	{% else %}
+		<!-- This is already working so, good job! -->
+		<small class="bg-red">User is not authenticated. Please log-in to view the page.</small>
+		<h3>Sorry, you do not have permissions to view this page.</h3>
+		<small><a href="/">Go back</a></small>
 	{% endif %}
 {% endblock %}
 

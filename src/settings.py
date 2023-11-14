@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'jazzmin',
     'adminlte3',
     'adminlte3_theme',
+    'crispy_forms',
+    'crispy_bootstrap4',
 
     ### defaults
     'django.contrib.admin',
@@ -166,5 +168,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Affects to the "welcome" url (after successful authentication) when
 # user logged in but don't have url to redirect. Optional.
 # Compatible logic with Django.
-LOGIN_REDIRECT_URL = '/home/' # set this as the go-to page after successful login
+LOGIN_REDIRECT_URL = '/' # set this as the go-to page after successful login
 LOGIN_URL = 'login/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'     # for the css of crispy forms
+PASSWORD_RESET_CONFIRM_TEMPLATE = '/password-reset/password-reset-confirm.html'
