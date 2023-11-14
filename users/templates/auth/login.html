@@ -107,9 +107,9 @@
 		<div class="card">
 			<div class="card-header">
 				<h3>Sign In</h3>
-				<div class="alert alert-{{ message.tags }}">{{ message }}</div>
 				<div class="d-flex justify-content-end social_icon">
 					<h6>Quick sign-up & log-in:</h6> 
+
 						<!-- create an a-tag to cover social_icon -->
 						<!-- <span><i class="fab fa-facebook-square"></i></span> -->
 					<a title="Google" class="socialaccount_provider google text-danger" href="/accounts/google/login/?process=login">
@@ -153,12 +153,11 @@
 
 		<!-- 2nd -->
 		<div class="card p-3 text-justify text-sm quoteText">
-			<h4>Admin Recommendation:</h4>
-			<p> I personally prefer that you do the manual registration for your email addresses' protection. </p>
-			<p> It's not as if there was no protection in place on the website (it's with "https", dude!), it's more of an added security because I, as the owner/admin of the site,
-			will not send you emails, anyway. :) </p>
-			<p> I also want users to be as anonymous as they can be here so, they can express who they really are. </p>
-			<p> Email addresses are mostly for convenience of recovering accounts in case of forgotten passwords. Still, ...it's your choice. One-click Google registration is faster and you won't have to remember your password. :D </p>
+			{% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+              {% endfor %}
+            {% endif %}
 		</div>
 	</div>
 </div>
