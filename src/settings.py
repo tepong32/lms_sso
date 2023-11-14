@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     ### third-party packages ###
     'allauth',
+    'jazzmin',
     'adminlte3',
     'adminlte3_theme',
 

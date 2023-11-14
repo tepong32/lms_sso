@@ -92,12 +92,29 @@ class User(AbstractBaseUser, PermissionsMixin):
         return str(self.staff_id)
 
 
+
+### creating classes that will work as ForeignKey options to the Profile class ###
+
+class WorkGroup(models.Model):
+    ### sampling fixed options (use admin interface)
+    ### we can use manual entries but linkings may be more difficult to implement?
+    class Classification(models.TextChoices):
+        FST     = "FST"
+        AUH     = "AUH"
+        ASP     = "ASP"
+        MSS     = "MSS"
+        HRS     = "HRS"
+        US      = "US"
+        CANADA  = "CANADA"
+
+    classification = models.CharField(verbose_name=("Workgroup: "), blank=True, max_length=80, choices=Classification.choices, default=Classification.US)
+
+    def __str__(self):
+        return self.classification
+
+
 class EmployeeClassification(models.Model):
-    '''
-        What are the user types of the app?
-        Default will be Agent but admin can set it to whatever is needed.
-        Just add instances of this class and they will be fetched as options for the "classification" attr of the Profile class.
-    '''
+    ### sampling manual entry options (use admin interface)
     name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
@@ -105,19 +122,22 @@ class EmployeeClassification(models.Model):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE) # if the user is deleted, the profile will be deleted, too
-    # display_name = models.CharField(blank=True, null=True, max_length=50, unique=True, verbose_name="Display Name: ",help_text="Get a cool-sounding alias.")
+    user                = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name          = models.CharField(max_length=50, blank=True)
     middle_name         = models.CharField(max_length=50, blank=True)
     last_name           = models.CharField(max_length=50, blank=True)
     ext_name            = models.CharField(max_length=3, blank=True)
     ### determining user class
-    classification = models.ForeignKey(EmployeeClassification, null=True, on_delete=models.SET_NULL)
+    classification      = models.ForeignKey(EmployeeClassification, null=True, on_delete=models.SET_NULL)
+    ### determining user's workgroup
+    workgroup           = models.ForeignKey(WorkGroup, null=True, on_delete=models.SET_NULL)
+    ### adding logic for certain employee classification
+    # if self.classification == "OM"
 
-    Dept01 = "Department 01"
-    Dept02 = "Department 02"
-    Dept03 = "Department 03"
-    dept_choices = [
+    Dept01              = "Department 01"
+    Dept02              = "Department 02"
+    Dept03              = "Department 03"
+    dept_choices        = [
         (Dept01, "Dept01"),
         (Dept02, "Dept02"),
         (Dept03, "Dept03")

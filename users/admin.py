@@ -4,7 +4,7 @@
 
 from django.contrib import admin
 from django.db import models
-from .models import User, Profile, EmployeeClassification
+from .models import User, WorkGroup, Profile, EmployeeClassification
 
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('staff_id', 'is_active', 'is_staff', 'is_superuser','last_login', 'date_joined')
@@ -33,3 +33,4 @@ class ProfileAdmin(admin.ModelAdmin):
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(EmployeeClassification, EmployeeClassificationAdmin)
+admin.site.register(WorkGroup)
