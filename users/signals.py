@@ -11,9 +11,9 @@ def create_profile(sender, instance, created, **kwargs):
 		a function to automatically create a profile for every time a new user registers/ is created
 	'''
 	if created:
-		default_emp_type = EmployeeType.objects.get(name='Advisor')
-		default_emp_workgroup = WorkGroup.objects.get(name='US')
-		Profile.objects.create(user=instance, emp_type=default_emp_type, workgroup=default_emp_workgroup)
+		advisor_type = EmployeeType.objects.get(name=EmployeeType.Type.ADVISOR)
+		us_workgroup = WorkGroup.objects.get(name=WorkGroup.Type.US)
+		Profile.objects.create(user=instance, emp_type=advisor_type, workgroup=us_workgroup)
 
 @receiver(post_save, sender=User)	# (arguments == the_signal, sender)
 def save_profile(sender, instance, **kwargs):

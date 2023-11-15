@@ -32,5 +32,5 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
 	class Meta:
 		model = Profile 	# the model that is going to be affected by this form is the Profile model,
-		fields = ["first_name", "middle_name", "last_name", "ext_name", "emp_type", "image",]
+		fields = ["first_name", "middle_name", "last_name", "ext_name", "image",]
 

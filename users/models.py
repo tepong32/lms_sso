@@ -89,10 +89,10 @@ class EmployeeType(models.Model):
     class Type(models.TextChoices):
         ### modify these options in forms.py: THIS SHOULD NOT BE EDITABLE BY USERS
         ADVISOR = "Advisor"
-        TEAMLEADER = "Team Leader"
-        OPSMGR = "Operations Manager"
+        TEAM_LEADER = "Team Leader"
+        OPERATIONS_MGR = "Operations Manager"
 
-    name = models.CharField(verbose_name=("Employee Type: "), max_length=80, choices=Type.choices, default=Type.ADVISOR, editable=False) # editable=False should not allow users to edit this name attr
+    name = models.CharField(verbose_name=("Employee Type: "), max_length=80, choices=Type.choices, default=Type.ADVISOR) # editable=False should not allow users to edit this name attr
 
     class Meta:
         verbose_name_plural = "Employee Types"
@@ -112,7 +112,7 @@ class WorkGroup(models.Model):
         US      = "US"
         CANADA  = "CANADA"
 
-    name = models.CharField(verbose_name=("Workgroup: "), blank=True, max_length=80, choices=Type.choices, default=Type.US)
+    name = models.CharField(verbose_name=("Workgroup: "), blank=True, max_length=80, choices=Type.choices)
 
     class Meta:
         verbose_name_plural = "Workgroups"
@@ -138,7 +138,7 @@ class Profile(models.Model):
     def dp_directory_path(instance, filename):
         # file will be uploaded to MEDIA_ROOT/DP/<username>/<filename> ---check settings.py. MEDIA_ROOT=media for the exact folder/location
         return 'users/{}/DP/{}'.format(instance.user.staff_id, filename)
-    image = models.ImageField(default='defaults/round.png', blank=True, upload_to=dp_directory_path, verbose_name="Photo")
+    image = models.ImageField(default='defaults/default_user_dp.png', blank=True, upload_to=dp_directory_path, verbose_name="Photo")
 
     def __str__(self):
         return f"{self.last_name}, {self.first_name} {self.ext_name}, {self.middle_name}".strip()

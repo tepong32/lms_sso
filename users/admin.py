@@ -4,7 +4,7 @@
 
 from django.contrib import admin
 from django.db import models
-from .models import User, Profile, EmployeeType, WorkGroup
+from .models import User, EmployeeType, WorkGroup, Profile
 
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('staff_id', 'is_active', 'is_staff', 'is_superuser','last_login', 'date_joined')
@@ -16,7 +16,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     )
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ["last_name", "first_name", "ext_name", "middle_name", "emp_type",
+    list_display = ["emp_type", "last_name", "first_name", "ext_name", "middle_name", 
     ]
 
 

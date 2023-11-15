@@ -15,3 +15,10 @@ users:
 
 	to-dos:
 	hierarchichal structure needs to be determined then implement is_staff status + restrictions
+
+
+
+how-to's:
+	comment-out users.profile model +related imports on admin, signals, etc
+	mm + m, csu, create default EmployeeType and/or WorkGroup instances
+	mm +m, uncomment profile model and signals to enable auto-profile-creation on user registration
