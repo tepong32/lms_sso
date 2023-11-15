@@ -1,11 +1,15 @@
 notes:
 
 home:
-	separated views for auth'ed and unauth'ed users implemented (well, not really...yet)
+
+	11/12/23
+	created Leave models automatically updating counters for yearly and quarterly limits (thank you, GPT4!)
+	admin can name/create any type of Leave (para mas madali buhay ko, ikaw na mag-create ng Leave Types mo! XD)
+
+	to=dos:
+	separated views for auth'ed and unauth'ed users / agents vs mgt team
 
 
-
-	
 
 users:
 	set account identifier as staff_id
@@ -22,3 +26,10 @@ how-to's:
 	comment-out users.profile model +related imports on admin, signals, etc
 	mm + m, csu, create default EmployeeType and/or WorkGroup instances
 	mm +m, uncomment profile model and signals to enable auto-profile-creation on user registration
+
+
+
+		TIP!
+		for future projects' password-change/reset things, see: https://docs.djangoproject.com/en/4.2/topics/auth/default/#module-django.contrib.auth.views
+
+		then you can actually just go to "env/site-packages/django/contrib/auth/templates/registration/" to copy or modify the templates directly (copying preferred. why? Think about it! ;)). No need to create new ones. LOL!

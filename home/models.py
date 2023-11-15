@@ -20,6 +20,7 @@ class Leave(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     start_date = models.DateField()
     end_date = models.DateField()
+    recipients = models.ManyToManyField(User, related_name='leave_recipients')
 
     def __str__(self):
         return f"{self.employee} - {self.leave_type} ({self.status})"
@@ -33,6 +34,29 @@ class Leave(models.Model):
             leave_counter.instances_used_this_year += leave_duration.days
             leave_counter.instances_used_this_quarter += leave_duration.days
             leave_counter.save()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class LeaveCounter(models.Model):
     '''
