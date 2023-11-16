@@ -5,23 +5,23 @@ homepage
 
 hello, {{request.user.username}} // {{request.user.staff_id}}!
 
-<br>
+<hr>
 testing filters: <br>
 <h4>advisors</h4>
 {% for adv in advisors %}
-{{adv.last_name}}, {{adv.first_name}}
+<a href="{% url 'profile' adv.user.staff_id %}"> {{adv.last_name}}, {{adv.first_name}}</a>
 {% endfor %}
 <hr>
 
 <h4>team leaders</h4>
 {% for tl in tls %}
-{{tl.last_name}}, {{tl.first_name}}
+<a href="{% url 'profile' tl.user.staff_id %}"> {{tl.last_name}}, {{tl.first_name}}</a>
 {% endfor %}
 <hr>
 
 <h4>operations managers</h4>
 {% for om in oms %}
-{{om.last_name}}, {{om.first_name}}
+<a href="{% url 'profile' om.user.staff_id %}">{{om.last_name}}, {{om.first_name}}</a>
 {% endfor %}
 <hr>
 
