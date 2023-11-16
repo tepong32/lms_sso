@@ -92,7 +92,7 @@ class EmployeeType(models.Model):
         TEAM_LEADER = "Team Leader"
         OPERATIONS_MGR = "Operations Manager"
 
-    name = models.CharField(verbose_name=("Employee Type: "), max_length=80, choices=Type.choices, default=Type.ADVISOR) # editable=False should not allow users to edit this name attr
+    name = models.CharField(verbose_name=("Employee Type: "), max_length=80, blank=True, choices=Type.choices) # editable=False should not allow users to edit this name attr
 
     class Meta:
         verbose_name_plural = "Employee Types"
@@ -124,11 +124,9 @@ class WorkGroup(models.Model):
 class Profile(models.Model):
     user                = models.OneToOneField(User, on_delete=models.CASCADE)
     ### determining user's class
-    emp_type            = models.ForeignKey(EmployeeType, null=True, blank=True, on_delete=models.SET_NULL,
-        default=EmployeeType.Type.ADVISOR)
-    ### determining user's workgroup
-    workgroup           = models.ForeignKey(WorkGroup, null=True, blank=True, on_delete=models.SET_NULL,
-        default=WorkGroup.Type.US)
+    emp_type            = models.ForeignKey(EmployeeType, null=True, blank=True, on_delete=models.SET_NULL)
+    # ### determining user's workgroup
+    workgroup           = models.ForeignKey(WorkGroup, null=True, blank=True, on_delete=models.SET_NULL)
 
     first_name          = models.CharField(max_length=50, blank=True)
     middle_name         = models.CharField(max_length=50, blank=True)
