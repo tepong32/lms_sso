@@ -2,13 +2,28 @@
 
 {% block content %}
 homepage
- <br>
-
-
-
-
-
 
 hello, {{request.user.username}} // {{request.user.staff_id}}!
+
+<br>
+testing filters: <br>
+<h4>advisors</h4>
+{% for adv in advisors %}
+{{adv.last_name}}, {{adv.first_name}}
+{% endfor %}
+<hr>
+
+<h4>team leaders</h4>
+{% for tl in tls %}
+{{tl.last_name}}, {{tl.first_name}}
+{% endfor %}
+<hr>
+
+<h4>operations managers</h4>
+{% for om in oms %}
+{{om.last_name}}, {{om.first_name}}
+{% endfor %}
+<hr>
+
 
 {% endblock content %}
