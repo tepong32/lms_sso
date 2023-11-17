@@ -7,23 +7,31 @@ hello, {{request.user.username}} // {{request.user.staff_id}}!
 
 <hr>
 testing filters: <br>
-<h4>advisors</h4>
+<h4>advisors list</h4>
 {% for adv in advisors %}
 <a href="{% url 'profile' adv.user.staff_id %}"> {{adv.last_name}}, {{adv.first_name}}</a>
 {% endfor %}
 <hr>
 
-<h4>team leaders</h4>
+<h4>team leaders list</h4>
 {% for tl in tls %}
 <a href="{% url 'profile' tl.user.staff_id %}"> {{tl.last_name}}, {{tl.first_name}}</a>
 {% endfor %}
 <hr>
 
-<h4>operations managers</h4>
+<h4>operations managers list</h4>
 {% for om in oms %}
 <a href="{% url 'profile' om.user.staff_id %}">{{om.last_name}}, {{om.first_name}}</a>
 {% endfor %}
 <hr>
 
+<div class="card">
+	leave counter per employee:
+	<small>this displays counter only for employees who already have approved leaves.
+	Apply filters to display all employees, leaves, statuses and counters </small><br>
+	{% for leave_counter in adv_all_leaves %}
+	    <p><a href="{% url 'profile' leave_counter.employee.staff_id %}">{{ leave_counter.employee.staff_id }}</a>: {{ leave_counter.instances_used_this_year }}</p>
+	{% endfor %}
+</div>
 
 {% endblock content %}

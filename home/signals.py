@@ -1,6 +1,8 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import Leave, LeaveCounter
+from django.utils import timezone
+
 
 @receiver(post_save, sender=Leave)
 def check_reset_dates(sender, instance, **kwargs):
