@@ -1,19 +1,35 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import Leave, LeaveCounter
+from users.models import User
+
+
+class UserChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return f"{obj.staff_id}"
 
 class LeaveForm(forms.ModelForm):
     '''
         This form validates if the user can still apply for Leaves and raises errors if they've already used-up
         or is about to exceed the allowed_instances per quarter or per year.
     '''
+    employee = UserChoiceField(
+        queryset=User.objects.all(),
+        disabled=True,
+    )
     class Meta:
         model = Leave
         fields = ['employee', 'leave_type', 'start_date', 'end_date']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['employee'].disabled = True
+        
+        self.fields['employee'] = forms.ModelChoiceField(
+            queryset=User.objects.all(),
+            disabled=True,
+            initial=self.initial.get('employee')
+        )
+        self.fields['employee'].widget = forms.HiddenInput()
 
     def clean(self):
         cleaned_data = super().clean()
@@ -35,9 +51,13 @@ class LeaveForm(forms.ModelForm):
 
 
 class LeaveCounterForm(forms.ModelForm):
+    '''
+        maybe remove this form and just display the needed info on the views page, not as part of the leave application form?
+    '''
     class Meta:
         model = LeaveCounter
-        fields = ['total_instances_per_year', 'total_approved_per_quarter', 'additional_instances']
+        fields = ['total_instances_per_year', 'total_approved_per_quarter', 'additional_instances',
+        'instances_used_this_year', 'instances_used_this_quarter']
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)

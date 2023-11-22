@@ -27,14 +27,10 @@ how-to's:
 	mm + m, csu, create default EmployeeType and/or WorkGroup instances
 	mm +m, uncomment profile model and signals to enable auto-profile-creation on user registration
 
-
-
 		TIP!
 		for future projects' password-change/reset things, see: https://docs.djangoproject.com/en/4.2/topics/auth/default/#module-django.contrib.auth.views
 
 		then you can actually just go to "env/site-packages/django/contrib/auth/templates/registration/" to copy or modify the templates directly (copying preferred. why? Think about it! ;)). No need to create new ones. LOL!
-
-
 
 manually create accounts for TLs and OMs
 	just create a filter of employees based on departments so they can view/approve/reject leave applications
