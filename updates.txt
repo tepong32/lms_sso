@@ -38,6 +38,7 @@ how-to's:
 
 manually create accounts for TLs and OMs
 	just create a filter of employees based on departments so they can view/approve/reject leave applications
+	maybe I'll go with this approach instead of deep-layering model-linkings
 
 create instances of TL's prior to creation of Advisors (for ForeignKey links)
 	>suepruser >OMs >TLs

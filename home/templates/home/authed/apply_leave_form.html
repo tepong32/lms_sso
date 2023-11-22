@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="card p-3 bg-gray">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <!-- this is a required line for added security -->
+    <fieldset class="form-group">
+      <legend class="border-bottom mb-1">Apply for a Leave</legend>
+      {{ form.media }}
+      {{ form|crispy }}
+      {{second_form.as_p}}
+    </fieldset>
+
+    <div class="form-group">
+      <button class="btn btn-success" type="submit">Post!</button>
+    </div>
+  </form>
+</div>
+
+
+
+{% endblock content %}

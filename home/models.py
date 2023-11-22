@@ -25,12 +25,6 @@ class Leave(models.Model):
     start_date = models.DateField(verbose_name='Start Date')
     end_date = models.DateField(verbose_name='End Date')
 
-    ### setting variables for recipients ###
-    opsmgr_type = EmployeeType.objects.get(Type=EmployeeType.Type.OPERATIONS_MGR).id
-    tl_type = EmployeeType.objects.get(Type=EmployeeType.Type.TEAM_LEADER).id
-
-    recipients = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, blank=True, limit_choices_to={'emp_type__in': [tl_type, opsmgr_type]}, related_name="leave_approver")
-
     def __str__(self):
         return f"{self.employee} - {self.leave_type} ({self.status})"
 
@@ -56,14 +50,16 @@ class LeaveCounter(models.Model):
     instances_used_this_quarter = models.PositiveIntegerField(default=0, verbose_name='Instances Used This Quarter')
     last_year_reset_date = models.DateField(null=True, blank=True, verbose_name='Last Year Reset Date')
     last_quarter_reset_date = models.DateField(null=True, blank=True, verbose_name='Last Quarter Reset Date')
+    additional_instances = models.PositiveIntegerField(default=0, verbose_name='Additional Instances')
+
 
 
     import calendar
 
     def reset_counters(self):
         '''
-        This updated version of the reset_counters method will reset the counters if the last reset date is less than the first day of the current quarter.
-        The current quarter is determined by calculating the quarter index based on the current month.
+        reset_counters method will reset the counters if the last reset date is less than the first day of the current quarter.
+        current quarter is determined by calculating the quarter index based on the current month.
         '''
         now = timezone.localtime(timezone.now())
         current_year = now.year
@@ -80,3 +76,12 @@ class LeaveCounter(models.Model):
             self.last_quarter_reset_date = quarter_start_date
 
         self.save()
+
+    ### properties added to consider additional_instances of Leaves (admin-editable only)
+    @property
+    def total_allowed_per_year(self):
+        return self.total_instances_per_year + self.additional_instances
+
+    @property
+    def total_allowed_per_quarter(self):
+        return self.total_approved_per_quarter + self.additional_instances
