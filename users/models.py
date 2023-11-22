@@ -128,10 +128,13 @@ class Profile(models.Model):
     # ### determining user's workgroup
     workgroup           = models.ForeignKey(WorkGroup, null=True, blank=True, on_delete=models.SET_NULL)
 
-    first_name          = models.CharField(max_length=50, blank=True)
+    first_name          = models.CharField(max_length=50)
     middle_name         = models.CharField(max_length=50, blank=True)
-    last_name           = models.CharField(max_length=50, blank=True)
+    last_name           = models.CharField(max_length=50)
     ext_name            = models.CharField(max_length=3, blank=True, verbose_name="Extension")
+
+    team_leader         = models.ForeignKey(EmployeeType, related_name='profile_team_leader', null=True, blank=True, on_delete=models.SET_NULL)
+    operations_manager  = models.ForeignKey(EmployeeType, related_name='profile_operations_manager', null=True, blank=True, on_delete=models.SET_NULL)
     
     def dp_directory_path(instance, filename):
         # file will be uploaded to MEDIA_ROOT/DP/<username>/<filename> ---check settings.py. MEDIA_ROOT=media for the exact folder/location
@@ -152,3 +155,23 @@ class Profile(models.Model):
             output_size = (600, 600)
             img.thumbnail(output_size)
             img.save(self.image.path)
+
+
+    ### These properties will return True if the emp_type of the Profile instance is TEAM_LEADER or OPERATIONS_MGR, respectively, and False otherwise.
+    ### 
+    '''
+    These properties can be used in your views and templates just like any other attribute of the Profile model. For example, you can check if a user is a team leader or operations manager in a template like this:
+
+    {% if user.profile.is_team_leader %}
+        <!-- Display content for team leaders -->
+    {% elif user.profile.is_operations_manager %}
+        <!-- Display content for operations managers -->
+    {% endif %}
+    '''
+    @property
+    def is_team_leader(self):
+        return self.emp_type.name == EmployeeType.Type.TEAM_LEADER if self.emp_type else False
+
+    @property
+    def is_operations_manager(self):
+        return self.emp_type.name == EmployeeType.Type.OPERATIONS_MGR if self.emp_type else False
