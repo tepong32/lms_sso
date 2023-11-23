@@ -10,7 +10,9 @@
       <legend class="border-bottom mb-1">Apply for a Leave</legend>
       {{ form.media }}
       {{ form|crispy }}
-      {{second_form.as_p}}
+      {% if request.user.is_admin or request.user.is_staff or request.user.is_team_leader or request.user.is_operations_manager %}
+        {{second_form.as_p}}
+      {% endif %}
     </fieldset>
 
     <div class="form-group">
