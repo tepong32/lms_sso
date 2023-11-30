@@ -48,3 +48,9 @@ comment-out the ff when creating a superuser for the first time:
 	models.py 		Profile.emp_type, Profile.workgroup
 
 
+
+
+
+ERROR on form: "employee
+
+    This field is required."  Work on it.

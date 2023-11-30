@@ -24,7 +24,13 @@ testing filters: <br>
 <a href="{% url 'profile' om.user.staff_id %}">{{om.last_name}}, {{om.first_name}}</a>
 {% endfor %}
 <hr>
-
+<h3>the current user's instances used:</h3>
+{% if instances_used_this_year and instances_used_this_quarter %}
+    <p>Instances used this year: {{ instances_used_this_year }}</p>
+    <p>Instances used this quarter: {{ instances_used_this_quarter }}</p>
+{% else %}
+    <p>No leave counter data available for this user.</p>
+{% endif %}
 <div class="card">
 	leave counter per employee:
 	<small>this displays counter only for employees who already have approved leaves.
