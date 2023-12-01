@@ -15,3 +15,15 @@ def check_reset_dates(sender, instance, **kwargs):
     if today.month in [1, 4, 7, 10]:
         leave_counter, _ = LeaveCounter.objects.get_or_create(employee=instance.employee)
         leave_counter.reset_counters()
+
+
+from users.models import User
+
+@receiver(post_save, sender=User)
+def create_leave_counter(sender, instance, created, **kwargs):
+    if created:
+        LeaveCounter.objects.create(employee=instance)
+
+@receiver(post_save, sender=User)
+def save_leave_counter(sender, instance, **kwargs):
+    instance.leavecounter.save()
