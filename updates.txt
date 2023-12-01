@@ -51,6 +51,6 @@ comment-out the ff when creating a superuser for the first time:
 
 
 
-ERROR on form: "employee
-
-    This field is required."  Work on it.
+ERROR newly-created accounts not being able to submit leave requests.
+	bing says it is because the leave_counter is being created before the user gets its ID
+	work on signals

@@ -22,7 +22,9 @@ from users.models import User
 @receiver(post_save, sender=User)
 def create_leave_counter(sender, instance, created, **kwargs):
     if created:
-        LeaveCounter.objects.create(employee=instance)
+        print(f'User object: {instance}')
+        leave_counter = LeaveCounter.objects.create(employee=instance)
+        print(f'LeaveCounter object: {leave_counter}')
 
 @receiver(post_save, sender=User)
 def save_leave_counter(sender, instance, **kwargs):
