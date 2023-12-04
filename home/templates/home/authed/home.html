@@ -9,7 +9,13 @@ hello, {{request.user.username}} // {{request.user.staff_id}}!
 testing filters: <br>
 <h4>advisors list</h4>
 {% for adv in advisors %}
-<a href="{% url 'profile' adv.user.staff_id %}"> {{adv.last_name}}, {{adv.first_name}}</a>
+	{% if adv.last_name and adv.first_name %}
+		<a href="{% url 'profile' adv.user.staff_id %}"> {{adv.last_name}}, {{adv.first_name}}</a>
+		<br>	
+	{% else %}
+		<a href="{% url 'profile' adv.user.staff_id %}">{{adv.user.staff_id}}</a>
+		<small>( <-- this user has no profile yet so, staff ID!)</small>
+	{% endif %}
 {% endfor %}
 <hr>
 
