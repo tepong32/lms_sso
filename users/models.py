@@ -133,8 +133,10 @@ class Profile(models.Model):
     last_name           = models.CharField(max_length=50)
     ext_name            = models.CharField(max_length=3, blank=True, verbose_name="Extension")
 
-    team_leader         = models.ForeignKey(EmployeeType, related_name='profile_team_leader', null=True, blank=True, on_delete=models.SET_NULL)
-    operations_manager  = models.ForeignKey(EmployeeType, related_name='profile_operations_manager', null=True, blank=True, on_delete=models.SET_NULL)
+    ### these do not work as intended.
+    ### they need to be selecting from instances of user.profile.emp_type=TEAM_LEADER / OPERATIONS_MGR; not EmployeeType
+    # team_leader         = models.ForeignKey(EmployeeType, related_name='profile_team_leader', null=True, blank=True, on_delete=models.SET_NULL)
+    # operations_manager  = models.ForeignKey(EmployeeType, related_name='profile_operations_manager', null=True, blank=True, on_delete=models.SET_NULL)
     
     def dp_directory_path(instance, filename):
         # file will be uploaded to MEDIA_ROOT/DP/<username>/<filename> ---check settings.py. MEDIA_ROOT=media for the exact folder/location
