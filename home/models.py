@@ -3,10 +3,6 @@ from django.utils import timezone
 from datetime import timedelta
 from users.models import User, EmployeeType, Profile
 
-
-
-
-
 class LeaveType(models.Model):
     name = models.CharField(max_length=200, verbose_name='Name')
 
@@ -29,14 +25,18 @@ class Leave(models.Model):
         return f"{self.employee} - {self.leave_type} ({self.status})"
 
     def save(self, *args, **kwargs):
+        # Check if the status has changed to 'approved'
+        if self.pk is not None:
+            orig = Leave.objects.get(pk=self.pk)
+            if orig.status != self.status and self.status == 'approved':
+                # Update LeaveCounter only when leave is approved
+                leave_counter, _ = LeaveCounter.objects.get_or_create(employee=self.employee)
+                leave_duration = self.end_date - self.start_date + timedelta(days=1) # Include both start and end dates
+                leave_counter.instances_used_this_year += leave_duration.days
+                leave_counter.instances_used_this_quarter += leave_duration.days
+                leave_counter.save()
+
         super().save(*args, **kwargs)
-        if self.status == 'approved':
-            # Update LeaveCounter only when leave is approved
-            leave_counter, _ = LeaveCounter.objects.get_or_create(employee=self.employee)
-            leave_duration = self.end_date - self.start_date + timedelta(days=1) # Include both start and end dates
-            leave_counter.instances_used_this_year += leave_duration.days
-            leave_counter.instances_used_this_quarter += leave_duration.days
-            leave_counter.save()
 
 class LeaveCounter(models.Model):
     '''

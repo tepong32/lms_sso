@@ -29,21 +29,26 @@ def homeView(request):
     # initializing instances variables
     instances_used_this_year = None
     instances_used_this_quarter = None
+    leave_counter = None
 
-    try:
-        leave_counter = LeaveCounter.objects.get(employee=loggedin_user)
-        instances_used_this_year = leave_counter.instances_used_this_year
-        instances_used_this_quarter = leave_counter.instances_used_this_quarter
-    except LeaveCounter.DoesNotExist:
-        pass  # leave_counter does not exist for this user
+    if loggedin_user.is_authenticated:
+        try:
+            leave_counter = LeaveCounter.objects.get(employee=loggedin_user)
+            instances_used_this_year = leave_counter.instances_used_this_year
+            instances_used_this_quarter = leave_counter.instances_used_this_quarter
+        except LeaveCounter.DoesNotExist:
+            pass  # leave_counter does not exist for this user
 
     context = {
         'advisors': Profile.objects.filter(emp_type__name=EmployeeType.Type.ADVISOR),
         'tls': Profile.objects.filter(emp_type__name=EmployeeType.Type.TEAM_LEADER),
         'oms': Profile.objects.filter(emp_type__name=EmployeeType.Type.OPERATIONS_MGR),
         'adv_all_leaves': LeaveCounter.objects.all(),
-        'instances_used_this_year': leave_counter.instances_used_this_year,
-        'instances_used_this_quarter': leave_counter.instances_used_this_quarter,
+
+        ### will return leave_counter.instances_used_this_year if leave_counter is not None, and 0 otherwise.
+        'instances_used_this_year': getattr(leave_counter, 'instances_used_this_year', 0),
+        ### will return leave_counter.instances_used_this_quarter if leave_counter is not None, and 0 otherwise.
+        'instances_used_this_quarter': getattr(leave_counter, 'instances_used_this_quarter', 0),
     }
     return render(request, 'home/authed/home.html', context)
 
@@ -58,7 +63,7 @@ class ApplyLeaveView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        leave_counter = LeaveCounter.objects.get(employee=self.request.user)
+        leave_counter, _ = LeaveCounter.objects.get_or_create(employee=self.request.user)
         data['leave_counter'] = leave_counter
         return data
 
