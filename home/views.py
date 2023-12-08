@@ -61,7 +61,17 @@ class ApplyLeaveView(LoginRequiredMixin, CreateView):
     success_message = "Leave request submitted."
     success_url = '/'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'employee': self.request.user})
+        return kwargs
+
     def get_context_data(self, **kwargs):
+        '''
+            The get_context_data method is used to add additional context variables to the template.
+            If you’re using the leave_counter variable in your template, then you should keep this method.
+            This method ensures that a LeaveCounter object is created for every user when they access the view.
+        '''
         data = super().get_context_data(**kwargs)
         leave_counter, _ = LeaveCounter.objects.get_or_create(employee=self.request.user)
         data['leave_counter'] = leave_counter

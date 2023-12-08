@@ -14,26 +14,20 @@ class LeaveForm(forms.ModelForm):
         This form validates if the user can still apply for Leaves and raises errors if they've already used-up
         or is about to exceed the allowed_instances per quarter or per year.
     '''
-    employee = UserChoiceField(
-        queryset=User.objects.all(), 
-        disabled=True,
-    )
     class Meta:
         model = Leave
         fields = ['leave_type', 'start_date', 'end_date']
 
     def __init__(self, *args, **kwargs):
+        self.employee = kwargs.pop('employee', None)
         super().__init__(*args, **kwargs)
-        self.fields['employee'].widget = forms.HiddenInput()
-        self.fields['employee'].required = False
 
     def clean(self):
         cleaned_data = super().clean()
-        employee = cleaned_data.get('employee')
         start_date = cleaned_data.get('start_date')
         end_date = cleaned_data.get('end_date')
 
-        leave_counter, created = LeaveCounter.objects.get_or_create(employee=employee)
+        leave_counter, created = LeaveCounter.objects.get_or_create(employee=self.employee)
         
         if start_date and end_date:
             leave_duration = (end_date - start_date).days + 1

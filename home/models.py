@@ -43,15 +43,27 @@ class LeaveCounter(models.Model):
         This counts and limits the approved leaves of each user.
         We may need to change the values used as hours instead of # of days to incorporate accrueable leave credits
     '''
-    employee = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Employee')
-    total_instances_per_year = models.PositiveIntegerField(default=25, verbose_name='Total Instances Per Year')
-    total_approved_per_quarter = models.PositiveIntegerField(default=6, verbose_name='Total Approved Per Quarter')
+    employee = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Requester')
+    max_instances_per_year = models.PositiveIntegerField(default=25, verbose_name='Max. Instances Per Year', help_text="This count shows the default. Always check for 'additional_instances' for the actual computation of the max_allowed instances per_year and per_quarter.")
+    max_instances_per_quarter = models.PositiveIntegerField(default=6, verbose_name='Max. Instances Per Quarter', help_text="This count shows the default. Always check for 'additional_instances' for the actual computation of the max_allowed instances per_year and per_quarter.")
     instances_used_this_year = models.PositiveIntegerField(default=0, verbose_name='Instances Used This Year')
     instances_used_this_quarter = models.PositiveIntegerField(default=0, verbose_name='Instances Used This Quarter')
     last_year_reset_date = models.DateField(null=True, blank=True, verbose_name='Last Year Reset Date')
     last_quarter_reset_date = models.DateField(null=True, blank=True, verbose_name='Last Quarter Reset Date')
-    additional_instances = models.PositiveIntegerField(default=0, verbose_name='Additional Instances')
+    additional_instances_per_year = models.PositiveIntegerField(default=0, verbose_name='Additional Instances Per Year')
+    additional_instances_per_quarter = models.PositiveIntegerField(default=0, verbose_name='Additional Instances Per Quarter')
 
+    def save(self, *args, **kwargs):
+        self.max_instances_per_year += self.additional_instances_per_year
+        self.max_instances_per_quarter += self.additional_instances_per_quarter
+        ### if we need to set the attributes to 0 again after adding counts to the max_instances, uncomment the 2 lines below
+        # self.additional_instances_per_year = 0
+        # self.additional_instances_per_quarter = 0
+
+        ### this is just used to test if the reset_counters() is working correctly. comment-out the lines above
+        ### error shows cannot compate datetime.datetime to datetime.date
+        # self.reset_counters() 
+        super().save(*args, **kwargs)
 
 
     import calendar
@@ -70,18 +82,28 @@ class LeaveCounter(models.Model):
         if self.last_year_reset_date is None or self.last_year_reset_date < quarter_start_date:
             self.instances_used_this_year = 0
             self.last_year_reset_date = quarter_start_date
+            self.max_instances_per_year = 6
+            self.additional_instances_per_quarter = 0
 
         if self.last_quarter_reset_date is None or self.last_quarter_reset_date < quarter_start_date:
             self.instances_used_this_quarter = 0
             self.last_quarter_reset_date = quarter_start_date
-
+            self.max_instances_per_quarter = 6
+            self.additional_instances_per_quarter = 0
         self.save()
 
     ### properties added to consider additional_instances of Leaves (admin-editable only)
     @property
     def total_allowed_per_year(self):
-        return self.total_instances_per_year + self.additional_instances
+        return self.max_instances_per_year + self.additional_instances_per_year
 
     @property
     def total_allowed_per_quarter(self):
-        return self.total_approved_per_quarter + self.additional_instances
+        return self.max_instances_per_quarter + self.additional_instances_per_quarter
+
+    def __str__(self):
+        if self.employee.profile:
+            return str(self.employee.profile)
+        else:
+            ### work on this one. It's now showing the staff_id
+            return str(self.employee.staff_id)

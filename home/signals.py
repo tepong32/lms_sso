@@ -21,22 +21,32 @@ from datetime import timedelta
 
 @receiver(post_save, sender=Leave)
 def create_or_update_leave_counter(sender, instance, created, **kwargs):
+    '''
+        leave_counter counts will increase when a leave is approved,
+        decrease when an approved leave is deleted or its status changes,
+        and stay the same when a leave that is not approved is updated.
+    '''
     leave_counter = LeaveCounter.objects.get(employee=instance.employee)
     leave_duration = (instance.end_date - instance.start_date).days + 1 # Include both start and end dates
     if created:
-        leave_counter.instances_used_this_year += leave_duration.days
-        leave_counter.instances_used_this_quarter += leave_duration.days
+        if instance.status == 'approved':
+            leave_counter.instances_used_this_year += leave_duration
+            leave_counter.instances_used_this_quarter += leave_duration
     else:
         original_leave = sender.objects.get(pk=instance.pk)
         original_duration = (original_leave.end_date - original_leave.start_date).days + 1
-        leave_counter.instances_used_this_year += leave_duration - original_duration
-        leave_counter.instances_used_this_quarter += leave_duration - original_duration
+        if original_leave.status == 'approved':
+            leave_counter.instances_used_this_year -= original_duration
+            leave_counter.instances_used_this_quarter -= original_duration
+        if instance.status == 'approved':
+            leave_counter.instances_used_this_year += leave_duration
+            leave_counter.instances_used_this_quarter += leave_duration
     leave_counter.save()
 
 @receiver(post_delete, sender=Leave)
 def delete_leave_counter(sender, instance, **kwargs):
     leave_counter = LeaveCounter.objects.get(employee=instance.employee)
     leave_duration = (instance.end_date - instance.start_date).days + 1 # Include both start and end dates
-    leave_counter.instances_used_this_year -= leave_duration.days
-    leave_counter.instances_used_this_quarter -= leave_duration.days
+    leave_counter.instances_used_this_year -= leave_duration
+    leave_counter.instances_used_this_quarter -= leave_duration
     leave_counter.save()
