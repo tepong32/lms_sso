@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'adminlte3_theme',
     'crispy_forms',
     'crispy_bootstrap4',
+    'rest_framework',
 
     ### defaults
     'django.contrib.admin',

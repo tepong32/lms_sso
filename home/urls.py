@@ -13,8 +13,8 @@ from .views import (
 urlpatterns = [
     path('', homeView, name='home'),
     path('apply-leave/', ApplyLeaveView.as_view(), name='apply-leave'),
-    path('<str:slug>/update/', LeaveUpdateView.as_view(), name='update-leave'),
-    path('<str:slug>delete/', LeaveDeleteView.as_view(), name='delete-leave'),
+    path('leaves/<int:pk>/update/', LeaveUpdateView.as_view(), name='update-leave'),
+    path('leaves/<int:pk>/delete/', LeaveDeleteView.as_view(), name='delete-leave'),
     # path('<str:slug>/', PostDetailView.as_view(), name='post-detail'),
     # path('<str:username>/', UserPostFilter.as_view(), name='user-posts'),     # filters applied to posts
     # path('add-category/', CategoryCreateView.as_view(), name='add-category'),

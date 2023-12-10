@@ -61,7 +61,7 @@ class LeaveCounter(models.Model):
         # self.additional_instances_per_quarter = 0
 
         ### this is just used to test if the reset_counters() is working correctly. comment-out the lines above
-        ### error shows cannot compate datetime.datetime to datetime.date
+        ### error shows cannot compare datetime.datetime to datetime.date
         # self.reset_counters() 
         super().save(*args, **kwargs)
 
