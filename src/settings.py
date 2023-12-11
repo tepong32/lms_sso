@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     ### admin-created apps ###
+    'api.apps.ApiConfig',
     'home.apps.HomeConfig',
     'users.apps.UsersConfig',
 
