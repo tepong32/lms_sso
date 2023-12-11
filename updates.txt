@@ -22,11 +22,3 @@ comment-out the ff when creating a superuser for the first time:
 	apps.py 		def ready(self):
 	admin.py 		ProfileAdmin.emp_type
 	models.py 		Profile.emp_type, Profile.workgroup
-
-
-
-
-
-ERROR newly-created accounts not being able to submit leave requests.
-	bing says it is because the leave_counter is being created before the user gets its ID
-	work on signals
