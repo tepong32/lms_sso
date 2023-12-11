@@ -1,46 +1,19 @@
-notes:
-
-home:
-
-	11/12/23
-	created Leave models automatically updating counters for yearly and quarterly limits (thank you, GPT4!)
-	admin can name/create any type of Leave (para mas madali buhay ko, ikaw na mag-create ng Leave Types mo! XD)
-
-	to=dos:
-	separated views for auth'ed and unauth'ed users / agents vs mgt team
-
-
-
-users:
-	set account identifier as staff_id
-	working CRUD pages for users' profile info
-	Marlon's custom user requirement partially met. :)
-	EmployeeClassification linked to Profile model successfully. Just remove/comment-out "classification" attr on Profile model prior to 1st migration, create the default instance of EmployeeClassification and then restore "classification" attr
-
-	to-dos:
-	hierarchichal structure needs to be determined then implement is_staff status + restrictions
-
-
-
 how-to's:
 	comment-out users.profile model +related imports on admin, signals, etc
 	mm + m, csu, create default EmployeeType and/or WorkGroup instances
 	mm +m, uncomment profile model and signals to enable auto-profile-creation on user registration
-
-
 
 		TIP!
 		for future projects' password-change/reset things, see: https://docs.djangoproject.com/en/4.2/topics/auth/default/#module-django.contrib.auth.views
 
 		then you can actually just go to "env/site-packages/django/contrib/auth/templates/registration/" to copy or modify the templates directly (copying preferred. why? Think about it! ;)). No need to create new ones. LOL!
 
-
-
 manually create accounts for TLs and OMs
 	just create a filter of employees based on departments so they can view/approve/reject leave applications
+	maybe I'll go with this approach instead of deep-layering model-linkings
 
 create instances of TL's prior to creation of Advisors (for ForeignKey links)
-	>suepruser >OMs >TLs
+	>superuser >OMs >TLs
 
 for easier profile creations, options for Advisors' department, tl and om attributes will be hard-coded for now
 	automatic-profile creation breaks when there are more than one ForeignKey linkings. idk what's wrong yet
@@ -49,5 +22,3 @@ comment-out the ff when creating a superuser for the first time:
 	apps.py 		def ready(self):
 	admin.py 		ProfileAdmin.emp_type
 	models.py 		Profile.emp_type, Profile.workgroup
-
-

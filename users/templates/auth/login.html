@@ -154,10 +154,10 @@
 		<!-- 2nd -->
 		<div class="card p-3 text-justify text-sm quoteText">
 			{% if messages %}
-              {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-              {% endfor %}
-            {% endif %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
 		</div>
 	</div>
 </div>
