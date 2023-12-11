@@ -170,7 +170,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # user logged in but don't have url to redirect. Optional.
 # Compatible logic with Django.
 LOGIN_REDIRECT_URL = '/' # set this as the go-to page after successful login
-LOGIN_URL = 'login/'
+LOGIN_URL = '/login/' # this should explicitly be "/login/" as it is an absolute path
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'     # for the css of crispy forms
 PASSWORD_RESET_CONFIRM_TEMPLATE = '/password-reset/password-reset-confirm.html'
