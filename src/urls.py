@@ -41,6 +41,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls'), name="home"),
     path('users/', include('users.urls'), name="users"),
+    path('api/', include('api.urls'), name="api"),
 
 
     # # these views/html templates are inside the "user" app

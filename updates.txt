@@ -22,3 +22,6 @@ comment-out the ff when creating a superuser for the first time:
 	apps.py 		def ready(self):
 	admin.py 		ProfileAdmin.emp_type
 	models.py 		Profile.emp_type, Profile.workgroup
+  
+DRF ADDED! <3
+	might need to create custom permissions but so far, this works as an initial working version of the backend

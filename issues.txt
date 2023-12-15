@@ -1,2 +1,4 @@
-Leaves already approved add counts to instances_used_this_year and instances_used_this_quarter. However, when changed back to Pending/Rejected, the counter does not subtract from both fields. Will need to work on automating this. For now, the workaround will be to manually change the counts in the admin panel.
+Leaves already approved add counts to instances_used_this_year and instances_used_this_quarter. However, when changed back to Pending/Rejected, the counter does not subtract from both fields. 
+	--- actually realized that this is a good FEATURE and should not be considered a BUG since "personal connection" to the TeamLeader can lead to illegal adjustments of leave credits.
+
 
