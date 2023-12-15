@@ -175,3 +175,10 @@ LOGIN_URL = '/login/' # this should explicitly be "/login/" as it is an absolute
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'     # for the css of crispy forms
 PASSWORD_RESET_CONFIRM_TEMPLATE = '/password-reset/password-reset-confirm.html'
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
