@@ -120,16 +120,33 @@ class LeaveDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 
+from .forms import IncreaseMaxInstancesForm
+from .utils import increase_max_instances
+
+def increase_max_instances_view(request):
+    if request.method == 'POST':
+        form = IncreaseMaxInstancesForm(request.POST)
+        if form.is_valid():
+            additional_instances = form.cleaned_data.get('additional_instances')
+            increase_max_instances(additional_instances)
+    else:
+        form = IncreaseMaxInstancesForm()
+    return render(request, 'home/authed/increase_max_instances.html', {'form': form})
 
 
+# views.py
+from django.views.generic.edit import FormView
+from .forms import IncreaseMaxInstancesForm
+from .utils import increase_max_instances
+from django.contrib import messages
 
+class IncreaseMaxInstancesView(FormView):
+    template_name = 'home/authed/increase_max_instances.html'
+    form_class = IncreaseMaxInstancesForm
+    success_url = '/'  # replace with your success url
 
-
-
-'''
-
-filter/query for leave counter only for the loggd-in user:
-    'adv_leaves': LeaveCounter.objects.filter(employee=user)
-
-
-'''
+    def form_valid(self, form):
+        additional_instances = form.cleaned_data.get('additional_instances')
+        increase_max_instances(additional_instances)
+        messages.success(self.request, f'Successfully increased max instances by {additional_instances} for all users.')
+        return super().form_valid(form)

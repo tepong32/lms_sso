@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-homepage
+alert/notif/messages here
+	{% if messages %}
+	    <div class="alert alert-{{ message.tags }}">
+	        {{ message }}
+	    </div>
+	{% endif %}
 
-hello, {{request.user.username}} // {{request.user.staff_id}}!
+<p>hello, {{request.user.username}} // {{request.user.staff_id}}!</p>
 
 <hr>
 testing filters: <br>
