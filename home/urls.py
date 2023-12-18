@@ -5,7 +5,7 @@ from .views import (
     ApplyLeaveView,
     LeaveUpdateView,
     LeaveDeleteView,
-    increase_max_instances_view
+    IncreaseMaxInstancesView
     )
 # alternatively, you can just use "from . import views".
 # however, importing views one-by-one seems to be a better option so you can remember which views you have already worked on.
@@ -16,7 +16,7 @@ urlpatterns = [
     path('apply-leave/', ApplyLeaveView.as_view(), name='apply-leave'),
     path('leaves/<int:pk>/update/', LeaveUpdateView.as_view(), name='update-leave'),
     path('leaves/<int:pk>/delete/', LeaveDeleteView.as_view(), name='delete-leave'),
-    path('increase_max_instances/', increase_max_instances_view, name='increase_max_instances'),
+    path('increase_max_instances/', IncreaseMaxInstancesView.as_view(), name='increase_max_instances'),
 
 
 
