@@ -207,15 +207,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
             </ul>
           </li>
+          {% if user.is_authenticated %}
           <li class="nav-item">
             <a href="/logout" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Logout
-                <span class="right badge badge-danger">New</span>
               </p>
             </a>
           </li>
+          {% else %}
+          <li class="nav-item">
+            <a href="/login" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Login
+              </p>
+            </a>
+          </li>
+          {% endif %}
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

@@ -7,3 +7,6 @@ IncreaseMaxInstances function/view added.
 
 
 Will need to work on carrying-over un-used allowed_instances_per_quarter to the next quarter/s.
+
+Newly-registered accounts need to be inactive first. (requires admin-intervention to be able to login to the site)
+Registration needs to include bio/profile details for admin convenience in allowing which accounts to approve.
