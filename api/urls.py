@@ -4,7 +4,7 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
+router.register(r'users', views.UserViewSet, basename='user')
 router.register(r'profiles', views.ProfileViewSet)
 router.register(r'groups', views.GroupViewSet)
 router.register(r'leaves', views.LeaveViewSet)

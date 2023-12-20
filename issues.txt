@@ -10,3 +10,10 @@ Will need to work on carrying-over un-used allowed_instances_per_quarter to the 
 
 Newly-registered accounts need to be inactive first. (requires admin-intervention to be able to login to the site)
 Registration needs to include bio/profile details for admin convenience in allowing which accounts to approve.
+
+DRF API views need to have urls using <staff_id> as opposed to currently used <pk>
+	--- lookup_field="staff_id" gives an error saying
+	"ImproperlyConfigured at /api/users/
+
+	Could not resolve URL for hyperlinked relationship using view name "user-detail". You may have failed to include the related model in your API, or incorrectly configured the `lookup_field` attribute on this field."
+

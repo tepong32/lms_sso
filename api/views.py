@@ -14,6 +14,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
+    lookup_field = "staff_id"
 
 class ProfileViewSet(viewsets.ModelViewSet):
     """
