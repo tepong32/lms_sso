@@ -46,4 +46,5 @@ class LeaveForm(forms.ModelForm):
 
 class IncreaseMaxInstancesForm(forms.Form):
     ''' See utils.py '''
-    additional_instances = forms.IntegerField()
+    year_additional_instances = forms.IntegerField()
+    quarter_additional_instances = forms.IntegerField()

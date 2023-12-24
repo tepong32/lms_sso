@@ -21,7 +21,8 @@ urlpatterns = [
 
 
 
-
+    ### these are part of my previous project and are just here for reference of how to make url paths
+    ### don't mind these
     # path('<str:slug>/', PostDetailView.as_view(), name='post-detail'),
     # path('<str:username>/', UserPostFilter.as_view(), name='user-posts'),     # filters applied to posts
     # path('add-category/', CategoryCreateView.as_view(), name='add-category'),

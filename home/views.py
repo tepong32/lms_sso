@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
+
 from users.models import User, Profile, EmployeeType
 from .models import Leave, LeaveCounter
 
@@ -81,7 +82,6 @@ class ApplyLeaveView(LoginRequiredMixin, CreateView):
         form.instance.employee = self.request.user    # to automatically get the id of the current logged-in user
         return super().form_valid(form)
 
-    
 
 class LeaveUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Leave 
@@ -119,34 +119,29 @@ class LeaveDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return False      
 
 
-
-from .forms import IncreaseMaxInstancesForm
-from .utils import increase_max_instances
-
-def increase_max_instances_view(request):
-    if request.method == 'POST':
-        form = IncreaseMaxInstancesForm(request.POST)
-        if form.is_valid():
-            additional_instances = form.cleaned_data.get('additional_instances')
-            increase_max_instances(additional_instances)
-    else:
-        form = IncreaseMaxInstancesForm()
-    return render(request, 'home/authed/increase_max_instances.html', {'form': form})
-
-
 # views.py
 from django.views.generic.edit import FormView
 from .forms import IncreaseMaxInstancesForm
 from .utils import increase_max_instances
 from django.contrib import messages
 
-class IncreaseMaxInstancesView(FormView):
+
+class IncreaseMaxInstancesView(LoginRequiredMixin, UserPassesTestMixin, FormView):
     template_name = 'home/authed/increase_max_instances.html'
     form_class = IncreaseMaxInstancesForm
     success_url = '/'  # replace with your success url
 
+    # def test_func(self):
+    #     return self.request.user.is_staff or self.request.user.profile.emp_type == "Team Leader" or self.request.user.profile.emp_type == "Operations Mgr"
+
+    def test_func(self):
+        return self.request.user.is_staff or self.request.user.profile.emp_type in ['Team Leader', 'Manager']
+
     def form_valid(self, form):
-        additional_instances = form.cleaned_data.get('additional_instances')
-        increase_max_instances(additional_instances)
-        messages.success(self.request, f'Successfully increased max instances by {additional_instances} for all users.')
+        year_additional_instances = form.cleaned_data.get('year_additional_instances')
+        quarter_additional_instances = form.cleaned_data.get('quarter_additional_instances')
+        increase_max_instances(year_additional_instances, quarter_additional_instances)
+        messages.success(self.request, f'Successfully adjusted max instances for all users by: \nYearly: {year_additional_instances} \nQuarterly: {quarter_additional_instances}')
         return super().form_valid(form)
+
+    
