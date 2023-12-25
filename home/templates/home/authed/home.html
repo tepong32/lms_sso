@@ -1,11 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-homepage
 
-hello, {{request.user.username}} // {{request.user.staff_id}}!
-
-<hr>
 testing filters: <br>
 <h4>advisors list</h4>
 {% for adv in advisors %}

@@ -41,10 +41,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="/static/admin-lte/index2.html" class="nav-link">Index2</a>
+        <a href="#" class="nav-link">Cluster Overview (?)</a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="/static/admin-lte/index3.html" class="nav-link">Index3</a>
+        <a href="#" class="nav-link">Calendar (?)</a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
         <a href="/apply-leave" class="nav-link">Apply for a Leave</a>
@@ -207,15 +207,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
             </ul>
           </li>
+          {% if user.is_authenticated %}
           <li class="nav-item">
             <a href="/logout" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Logout
-                <span class="right badge badge-danger">New</span>
               </p>
             </a>
           </li>
+          {% else %}
+          <li class="nav-item">
+            <a href="/login" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Login
+              </p>
+            </a>
+          </li>
+          {% endif %}
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -230,13 +240,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Base Page</h1>
+            {% if request.user.profile.first_name %}
+              <h4 class="m-0 text-dark">Welcome back, {{request.user.profile.first_name}}! <small class="text-sm"> ({{request.user.staff_id}})</small></h4>
+            {% else %}
+              <h3 class="m-0 text-dark">Welcome back, <small>{{request.user.staff_id}}</small></h3>
+            {% endif %}
           </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Starter Page</li>
-            </ol>
+          <div class="col-sm float-right">
+            <!-- alerts/notifs here -->
+            {% if messages %}
+              {% for message in messages %}
+                  <i class="alert alert-{{ message.tags }}">{{ message }}</i>
+              {% endfor %}
+            {% endif %}
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -246,6 +262,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid border border-solid-black">
+        
         <!-- This block is where the dynamic content of the app will be displayed -->
         {% block content %}
         

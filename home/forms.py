@@ -44,19 +44,7 @@ class LeaveForm(forms.ModelForm):
         return cleaned_data
 
 
-
-# class LeaveCounterForm(forms.ModelForm):
-#     '''
-#         This form has been removed from the apply-leave page.
-#         Leave instances are just displayed as informational fields
-#     '''
-#     class Meta:
-#         model = LeaveCounter
-#         fields = ['total_instances_per_year', 'total_approved_per_quarter', 'additional_instances',
-#         'instances_used_this_year', 'instances_used_this_quarter']
-
-#     def __init__(self, *args, **kwargs):
-#         self.user = kwargs.pop('user', None)
-#         super().__init__(*args, **kwargs)
-#         if self.user and self.user.profile.emp_type.name != EmployeeType.Type.TEAM_LEADER:
-#             self.fields['additional_instances'].disabled = True
+class IncreaseMaxInstancesForm(forms.Form):
+    ''' See utils.py '''
+    year_additional_instances = forms.IntegerField()
+    quarter_additional_instances = forms.IntegerField()
