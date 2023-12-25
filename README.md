@@ -5,6 +5,7 @@
   - uses <staff_id> as the main identifier for each User class
   - a fully-functional password-reset email system but credentials (of course...) are using env variables (gmail account)
       - Google now do not recommend using Gmail accounts to be used as the server-email-address (...or maybe just for test environments? idk)
+
   (not yet implemented:)
   - is_active status upon User registration should be set to False by default. Manual intervention from admins or users with specific permissions is needed for new accounts to be able to log in (to avoid having too many accounts and/or to ensure that details of each employee matches with company records)
   - tbc
@@ -19,6 +20,7 @@ Leave Counter:
   - Users' leave credit counts updates only when their leave requests are tagged as "approved". 
     - avoided exploitation of leave credits count by not adjusting the counter when an already-approved leave request was changed to another status (i.e. pending, rejected)
   - A special view for admins, team leaders and operations mgrs to adjust the leave counters (see localhost:8000/increase_max_instances)
+  
   (not yet implemented)
   - carry-over system for unused leave credits count per quarter (special instances)
 
