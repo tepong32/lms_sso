@@ -61,7 +61,7 @@ def get_default_workgroup():
     return WorkGroupName.objects.get_or_create(name="Default")[0].id
 
 class WorkGroupName(models.Model):
-    name = models.CharField(max_length=80)
+    name = models.CharField(max_length=80, unique=True)
 
     def __str__(self):
         return self.name
@@ -75,19 +75,19 @@ class WorkGroup(models.Model):
     def __str__(self):
         return f"{self.name}".strip()
 
-        
+
 class User(AbstractBaseUser, PermissionsMixin):
     '''
         Custom User model the app will use 
     '''
     ### key identifier attributes
     staff_id = models.PositiveIntegerField(unique=True) # change max_length if needed, add min_length/value
-    email = models.EmailField(blank=True, default="") # add unique & null field options in production!
+    email = models.EmailField(unique=True) # add unique & null field options in production!
 
     ### misc default User attributes
     date_joined = models.DateTimeField(default=timezone.now)
     last_login = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=False)  ############################### <-- disabled user account after registration, as the project needs
+    is_active = models.BooleanField(default=True)  ############################### <-- disabled user account after registration, SET TO TRUE FOR THE FIRST TIME!
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 

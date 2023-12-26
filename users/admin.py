@@ -54,4 +54,4 @@ class CustomUserAdmin(admin.ModelAdmin):
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(WorkGroup)
-# admin.site.register(WorkGroupName)
+admin.site.register(WorkGroupName)

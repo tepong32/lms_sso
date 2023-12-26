@@ -7,5 +7,8 @@
 comment-out the ff when creating a superuser for the first time:
 	apps.py 					def ready(self):
 	models.py & forms.py 		"workgroup" field
-  
+  	CHANGE user.is_active to TRUE for the superuser
+
+  	create a WorkGroupName "Default", then all the other workgroups needed ---dito sa id nito nagpe-fail e
+
 
