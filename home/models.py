@@ -68,6 +68,23 @@ class LeaveCounter(models.Model):
 
     import calendar
 
+    def carry_over(self):
+        '''
+        carry_over method will carry over the unused instances to the next quarter.
+        current quarter is determined by calculating the quarter index based on the current month.
+        '''
+        now = timezone.localtime(timezone.now())
+        current_quarter = (now.month - 1) // 3 + 1
+
+        if self.last_quarter_reset_date is not None:
+            last_quarter = (self.last_quarter_reset_date.month - 1) // 3 + 1
+            if last_quarter < current_quarter or (last_quarter == 4 and current_quarter == 1):  # If a new quarter has started
+                unused_instances = self.max_instances_per_quarter - self.instances_used_this_quarter
+                self.max_instances_per_quarter += unused_instances
+                self.instances_used_this_quarter = 0
+                self.last_quarter_reset_date = now
+                self.save()
+
     def reset_counters(self):
         '''
         reset_counters method will reset the counters if the last reset date is less than the first day of the current quarter.
@@ -86,9 +103,12 @@ class LeaveCounter(models.Model):
             self.additional_instances_per_quarter = 0
 
         if self.last_quarter_reset_date is None or self.last_quarter_reset_date < quarter_start_date:
+            # Before resetting the instances_used_this_quarter, calculate the unused instances and add them to max_instances_per_quarter
+            unused_instances = self.max_instances_per_quarter - self.instances_used_this_quarter
+            self.max_instances_per_quarter = 6 + unused_instances  # Reset max_instances_per_quarter to 6 plus any unused instances
+
             self.instances_used_this_quarter = 0
             self.last_quarter_reset_date = quarter_start_date
-            self.max_instances_per_quarter = 6
             self.additional_instances_per_quarter = 0
         self.save()
 

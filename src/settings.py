@@ -148,10 +148,10 @@ MEDIA_URL = 'media/' # or '/media/'
 # LOGIN_REDIRECT_URL = 'home'     # needed for the login.html success instance
 # LOGIN_URL = 'login'             # for the @login_required decorator on user.views.profile
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com' # or only your domain name if you have your own mail server
-# EMAIL_PORT = 587 #587
-# EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com' # or only your domain name if you have your own mail server
+EMAIL_PORT = 587 #587
+EMAIL_USE_TLS = True
 
 ### TO USE THESE VARIABLES BELOW, USE ENVIRONMENT VARIABLES TO HIDE SENSITIVE INFO
 ### CHECK CoreyMs' Django TUTORIAL # 12 -- 14:20
@@ -179,6 +179,9 @@ PASSWORD_RESET_CONFIRM_TEMPLATE = '/password-reset/password-reset-confirm.html'
 
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication'
+    ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
 }

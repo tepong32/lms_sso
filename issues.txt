@@ -2,10 +2,6 @@ Leaves already approved add counts to instances_used_this_year and instances_use
 	--- actually realized that this is a good FEATURE and should not be considered a BUG since "personal connection" to the TeamLeader can lead to illegal adjustments of leave credits.
 
 
-IncreaseMaxInstances function/view added.
-	--- might need to create separate adjustment fields for per_year and per_quarter adjustments.
-
-
 Will need to work on carrying-over un-used allowed_instances_per_quarter to the next quarter/s.
 
 Newly-registered accounts need to be inactive first. (requires admin-intervention to be able to login to the site)
