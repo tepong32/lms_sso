@@ -56,22 +56,18 @@ def profileEditView(request, staff_id=None):
         user = User.objects.get(staff_id=staff_id)
         if request.method == 'POST':    # for the new info to be saved, this if block is needed
             # the forms from forms.py
-            u_form = UserUpdateForm(request.POST, instance=request.user)        # instance is for the fields to auto-populate with user info
-            p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+            u_form = UserUpdateForm(request.POST, request.FILES, instance=request.user)        # instance is for the fields to auto-populate with user info
 
-            if u_form.is_valid() and p_form.is_valid():
+            if u_form.is_valid():
                 u_form.save()
-                p_form.save()
                 messages.success(request, f"Account info has been updated.")
                 return render(request, "users/profile.html", {"user":user})
 
         else:
             u_form = UserUpdateForm(instance=request.user)
-            p_form = ProfileUpdateForm(instance=request.user.profile)
         
         context = {
             'u_form': u_form,
-            'p_form': p_form,
         }
         return render(request, 'users/profile_edit.html', context)
 
@@ -79,7 +75,8 @@ def profileEditView(request, staff_id=None):
         return render ("User not found.")
 
 
-# accounts/users searching view
+### accounts/users searching view
+### not used ATM
 def user_search_view(request, *args, **kwargs):
     context = {}
     if request.method == "GET":

@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from datetime import timedelta
-from users.models import User, EmployeeType, Profile
+from users.models import User
 
 class LeaveType(models.Model):
     name = models.CharField(max_length=200, verbose_name='Name')
@@ -122,8 +122,4 @@ class LeaveCounter(models.Model):
         return self.max_instances_per_quarter + self.additional_instances_per_quarter
 
     def __str__(self):
-        if self.employee.profile:
-            return str(self.employee.profile)
-        else:
-            ### work on this one. It's now showing the staff_id
-            return str(self.employee.staff_id)
+        return f'Leave Counter for {str(self.employee)}'

@@ -23,7 +23,7 @@
                        alt="User profile picture" style="width: 150px; height: 150px">
                 </div>
                 
-                <h2 class="profile-staff_id text-center">{{user.profile.first_name}}
+                <h2 class="profile-staff_id text-center">{{user.first_name}}
 
                 {% if user.staff_id == request.user.staff_id %}
                   <small>
@@ -31,7 +31,7 @@
                   </small>
                 {% endif %}
                 </h2>
-                <p class="text-sm text-muted text-center"><i>{{user.staff_id}} / {{user.profile.workgroup}}</i></p>
+                <p class="text-sm text-muted text-center"><i>{{user.staff_id}} / {{user.workgroup}}</i></p>
 
                 <ul class="list-group list-group-unbordered mb-3">
                   <li class="list-group-item">
@@ -54,17 +54,17 @@
             <!-- About Me Box -->
             <div class="card card-primary col ml-1">
               <div class="card-header">
-                <h3 class="card-title">About Me</h3>
+                <h3 class="card-title">-----</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <p>{{user.profile.about_me}}</p>
+                <p>-----</p>
 
                 <hr>
 
                 <strong><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
 
-                <p class="text-muted">{{user.profile.location}}</p>
+                <p class="text-muted">-----</p>
 
                 <hr>
 
