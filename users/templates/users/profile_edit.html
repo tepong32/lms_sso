@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
-<div class="container col-8 bg-dark" style="padding-top: 1em">
+<div class="container col-4" style="padding-top: 1em">
   <!-- FORM STARTS HERE -->
   <form method="POST" enctype="multipart/form-data"> <!-- enctype="multipart/form-data" IS IMPORTANT for the image to save -->
     
@@ -20,7 +21,7 @@
           </p>
       {% endfor %}
       {{ form.media }}
-      {{ u_form }}
+      {{ u_form|crispy }}
     </fieldset>
 
     <div class="form-group">

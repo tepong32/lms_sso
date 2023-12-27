@@ -53,28 +53,6 @@ class CustomUserManager(UserManager):
         return self._create_user(staff_id, password, **extra_fields)
 
 
-def get_default_workgroup():
-    '''
-        Set a Default instance for the WorkGroupName model if there are no instances created yet.
-        This is used for provinding a default value for the workgroup field of the User model.
-    '''
-    return WorkGroupName.objects.get_or_create(name="Default")[0].id
-
-class WorkGroupName(models.Model):
-    name = models.CharField(max_length=80, unique=True)
-
-    def __str__(self):
-        return self.name
-
-class WorkGroup(models.Model):
-    name = models.ForeignKey(WorkGroupName, on_delete=models.CASCADE, verbose_name="Workgroup: ")
-
-    class Meta:
-        verbose_name_plural = "Workgroups"
-
-    def __str__(self):
-        return f"{self.name}".strip()
-
 
 class User(AbstractBaseUser, PermissionsMixin):
     '''
@@ -91,6 +69,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
+
     ### setting user type for permissions-related queries
     is_advisor          = models.BooleanField(default=True) ### <-- default is all users that register are advisors
     is_team_leader      = models.BooleanField(default=False)
@@ -104,6 +83,33 @@ class User(AbstractBaseUser, PermissionsMixin):
     ### this workgroup field uses the get_default_workgroup() above the User class
     # workgroup           = workgroup = models.ForeignKey(WorkGroup, on_delete=models.SET_DEFAULT, default=get_default_workgroup)
 
+    SFST    = "Secured Financial Support Team"
+    UFST    = "UnSecured Financial Support Team"
+    AUH     = "Australia Collections"
+    AU      = "Australia"
+    PH      = "Philippines"
+    SG      = "Singapore"
+    MSS     = "Marks & Spencer"
+    HRS     = "HSBC Repayment Services"
+    US      = "US"
+    CANADA  = "CANADA"
+    OTPA    = "Outcome Testing Policy Adherence"
+
+    choices = [
+        (SFST, "Secured Financial Support Team"),
+        (UFST, "UnSecured Financial Support Team"), 
+        (AUH, "Australia Collections"),
+        (AU, "Australia"),
+        (PH, "Philippines"),
+        (SG, "Singapore"),
+        (MSS, "Marks & Spencer"),
+        (HRS, "HSBC Repayment Services"),
+        (US, "United States"),
+        (CANADA, "Canada"),
+        (OTPA, "Outcome Testing Policy Adherence")
+        ]
+
+    workgroup           = models.CharField(max_length=100, choices=choices, default="Default", verbose_name="WorkGroup: ")
     
     objects = CustomUserManager() # set the CustomUserManager() above instead of default UserManager() from django.contrib.auth
 

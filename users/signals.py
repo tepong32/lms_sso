@@ -1,7 +1,8 @@
-# # this file is so that newly-registered users can have the "defaults" saved in their profiles.
-# from django.db.models.signals import post_save	# a signal that gets fired whenever an object is saved
-# from .models import User, Profile, EmployeeType, WorkGroup	# User is the sender of the signal
-# from django.dispatch import receiver 	# receiver
+# this file is so that newly-registered users can have the "defaults" saved in their profiles.
+from django.db.models.signals import post_save	# a signal that gets fired whenever an object is saved
+from .models import User#, Profile, EmployeeType, WorkGroup	# User is the sender of the signal
+from django.dispatch import receiver 	# receiver
+
 
 
 
