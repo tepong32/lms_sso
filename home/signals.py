@@ -12,7 +12,7 @@ def check_reset_dates(sender, instance, **kwargs):
         Do not forget to connect signal this to apps.py
     '''
     today = timezone.now().date()
-    if today.month in [0, 3, 6, 9]:
+    if today.month in [1, 4, 7, 10] and today.day == 1:
         leave_counter, _ = LeaveCounter.objects.get_or_create(employee=instance.employee)
         leave_counter.reset_counters()
 

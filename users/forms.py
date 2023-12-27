@@ -1,9 +1,6 @@
 from django import forms
-<<<<<<< HEAD
-from .models import User, WorkGroup
-=======
 from .models import User#, WorkGroup
->>>>>>> master
+
 from django.contrib.auth.forms import UserCreationForm
 
 
@@ -34,18 +31,18 @@ class UserUpdateForm(forms.ModelForm):
 		fields = ["email", "first_name", "middle_name", "last_name", "ext_name"]	# "staff_id" field removed for it should not be changeable , 'workgroup'
 
 
-class WorkGroupForm(forms.ModelForm):
-    class Meta:
-        model = WorkGroup
-        fields = ['name']
+# class WorkGroupForm(forms.ModelForm):
+#     class Meta:
+#         model = WorkGroup
+#         fields = ['name']
 
-    def clean_name(self):
-        name = self.cleaned_data.get('name')
-        if name == "Default":
-            raise forms.ValidationError("You must select a workgroup.")
-        return name
+#     def clean_name(self):
+#         name = self.cleaned_data.get('name')
+#         if name == "Default":
+#             raise forms.ValidationError("You must select a workgroup.")
+#         return name
 
-		fields = ["email", "first_name", "middle_name", "last_name", "ext_name", "workgroup"]	# "staff_id" field removed for it should not be changeable , 'workgroup'
+# 		fields = ["email", "first_name", "middle_name", "last_name", "ext_name", "workgroup"]	# "staff_id" field removed for it should not be changeable , 'workgroup'
 
 
 # class WorkGroupForm(forms.ModelForm):

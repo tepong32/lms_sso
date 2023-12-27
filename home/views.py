@@ -152,4 +152,16 @@ class IncreaseMaxInstancesView(LoginRequiredMixin, UserPassesTestMixin, FormView
         messages.success(self.request, f'Successfully adjusted max instances for all users by: \nYearly: {year_additional_instances} \nQuarterly: {quarter_additional_instances}')
         return super().form_valid(form)
 
-    
+
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+
+@csrf_exempt
+@login_required
+def check_reset_date(request):
+    if request.method == 'POST':
+        leave_counter = LeaveCounter.objects.get(employee=request.user)
+        leave_counter.reset_counters()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:  # GET request
+        return render(request, 'home/authed/reset_counters.html')
