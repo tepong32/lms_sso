@@ -1,9 +1,9 @@
-from users.models import User, Profile
+from users.models import User
 from django.contrib.auth.models import Group
 from home.models import Leave, LeaveType, LeaveCounter
 from rest_framework import permissions, viewsets
 
-from .serializers import GroupSerializer, UserSerializer, ProfileSerializer
+from .serializers import GroupSerializer, UserSerializer
 from .serializers import LeaveSerializer, LeaveTypeSerializer, LeaveCounterSerializer
 
 
@@ -15,14 +15,6 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
     lookup_field = "staff_id"
-
-class ProfileViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = Profile.objects.all().order_by('last_name')
-    serializer_class = ProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 class GroupViewSet(viewsets.ModelViewSet):
     """

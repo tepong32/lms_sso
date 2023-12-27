@@ -53,22 +53,87 @@ class CustomUserManager(UserManager):
         return self._create_user(staff_id, password, **extra_fields)
 
 
+# def get_default_workgroup():
+#     '''
+#         Set a Default instance for the WorkGroupName model if there are no instances created yet.
+#         This is used for provinding a default value for the workgroup field of the User model.
+#     '''
+#     return WorkGroupName.objects.get_or_create(name="Default")[0].id
+
+# class WorkGroupName(models.Model):
+#     name = models.CharField(max_length=80, unique=True)
+
+#     def __str__(self):
+#         return self.name
+
+# class WorkGroup(models.Model):
+#     name = models.ForeignKey(WorkGroupName, on_delete=models.CASCADE, verbose_name="Workgroup: ")
+
+#     class Meta:
+#         verbose_name_plural = "Workgroups"
+
+#     def __str__(self):
+#         return f"{self.name}".strip()
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     '''
-        the default (custom) User model the app will use 
+        Custom User model the app will use 
     '''
+    ### key identifier attributes
     staff_id = models.PositiveIntegerField(unique=True) # change max_length if needed, add min_length/value
-    email = models.EmailField(blank=True, default="") # add unique & null field options in production!
-    
+    email = models.EmailField(unique=True) # add unique & null field options in production!
+
+    ### misc default User attributes
     date_joined = models.DateTimeField(default=timezone.now)
     last_login = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)  ############################### <-- disabled user account after registration, SET TO TRUE FOR THE FIRST TIME!
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
-    objects = CustomUserManager() # set the CustomUserManager() above instead of default UserManager()
+    ### setting user type for permissions-related queries
+    is_advisor          = models.BooleanField(default=True) ### <-- default is all users that register are advisors
+    is_team_leader      = models.BooleanField(default=False)
+    is_operations_manager  = models.BooleanField(default=False)
 
-    USERNAME_FIELD = "staff_id" # default is "email" because of what we set on the CustomUserManager()
+    ### personal info <-- this should match company records as much as possible
+    first_name          = models.CharField(max_length=50)
+    middle_name         = models.CharField(max_length=50, blank=True)
+    last_name           = models.CharField(max_length=50)
+    ext_name            = models.CharField(max_length=3, blank=True, null=True, verbose_name="Extension")
+    ### this workgroup field uses the get_default_workgroup() above the User class
+
+    SFST    = "Secured Financial Support Team"
+    UFST    = "UnSecured Financial Support Team"
+    AUH     = "Australia Collections"
+    AU      = "Australia"
+    PH      = "Philippines"
+    SG      = "Singapore"
+    MSS     = "Marks & Spencer"
+    HRS     = "HSBC Repayment Services"
+    US      = "US"
+    CANADA  = "CANADA"
+    OTPA    = "Outcome Testing Policy Adherence"
+
+    choices = [
+        (SFST, "Secured Financial Support Team"),
+        (UFST, "UnSecured Financial Support Team"), 
+        (AUH, "Australia Collections"),
+        (AU, "Australia"),
+        (PH, "Philippines"),
+        (SG, "Singapore"),
+        (MSS, "Marks & Spencer"),
+        (HRS, "HSBC Repayment Services"),
+        (US, "United States"),
+        (CANADA, "Canada"),
+        (OTPA, "Outcome Testing Policy Adherence")
+        ]
+
+    workgroup           = models.CharField(max_length=100, choices=choices, default="Default", verbose_name="WorkGroup: ")
+    
+    objects = CustomUserManager() # set the CustomUserManager() above instead of default UserManager() from django.contrib.auth
+
+    USERNAME_FIELD = "staff_id" # the key identifier of accounts. This was also set on the CustomUserManager() class code
     REQUIRED_FIELDS = [] # ["email", "username", "first_name", "last_name"]
 
     class Meta:
@@ -76,81 +141,24 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = 'Users'
         
     def __str__(self):
-        return str(self.staff_id)
+        if {self.last_name} and {self.first_name}:
+            return f"{self.last_name}, {self.first_name} {self.ext_name}, {self.middle_name}".strip()
+        else:
+            return str(self.staff_id)
 
     def get_short_name(self):
         return str(self.staff_id)
 
-
-
-##### creating classes that will work as ForeignKey options to the Profile class #####
-class EmployeeType(models.Model):
-    ### sampling manual entry options (use admin interface)
-    class Type(models.TextChoices):
-        ### modify these options in forms.py: THIS SHOULD NOT BE EDITABLE BY USERS
-        ADVISOR = "Advisor"
-        TEAM_LEADER = "Team Leader"
-        OPERATIONS_MGR = "Operations Manager"
-
-    name = models.CharField(verbose_name=("Employee Type: "), max_length=80, blank=True, choices=Type.choices) # editable=False should not allow users to edit this name attr
-
-    class Meta:
-        verbose_name_plural = "Employee Types"
-
-    def __str__(self):
-        return f"{self.name}".strip()
-
-
-class WorkGroup(models.Model):
-    class Type(models.TextChoices):
-        ### apply if-statements below
-        FST     = "FST"
-        AUH     = "AUH"
-        ASP     = "ASP"
-        MSS     = "MSS"
-        HRS     = "HRS"
-        US      = "US"
-        CANADA  = "CANADA"
-
-    name = models.CharField(verbose_name=("Workgroup: "), blank=True, max_length=80, choices=Type.choices)
-
-    class Meta:
-        verbose_name_plural = "Workgroups"
-
-    def __str__(self):
-        return f"{self.name}".strip()
-
-
-class Profile(models.Model):
-    user                = models.OneToOneField(User, on_delete=models.CASCADE)
-    ### determining user's class
-    emp_type            = models.ForeignKey(EmployeeType, null=True, blank=True, on_delete=models.SET_NULL)
-    # ### determining user's workgroup
-    workgroup           = models.ForeignKey(WorkGroup, null=True, blank=True, on_delete=models.SET_NULL)
-
-    first_name          = models.CharField(max_length=50)
-    middle_name         = models.CharField(max_length=50, blank=True)
-    last_name           = models.CharField(max_length=50)
-    ext_name            = models.CharField(max_length=3, blank=True, verbose_name="Extension")
-
-    ### these do not work as intended.
-    ### they need to be selecting from instances of user.profile.emp_type=TEAM_LEADER / OPERATIONS_MGR; not EmployeeType
-    # team_leader         = models.ForeignKey(EmployeeType, related_name='profile_team_leader', null=True, blank=True, on_delete=models.SET_NULL)
-    # operations_manager  = models.ForeignKey(EmployeeType, related_name='profile_operations_manager', null=True, blank=True, on_delete=models.SET_NULL)
-    
     def dp_directory_path(instance, filename):
         # file will be uploaded to MEDIA_ROOT/DP/<username>/<filename> ---check settings.py. MEDIA_ROOT=media for the exact folder/location
         return 'users/{}/DP/{}'.format(instance.user.staff_id, filename)
     image = models.ImageField(default='defaults/default_user_dp.png', blank=True, upload_to=dp_directory_path, verbose_name="Photo")
 
-    def __str__(self):
-        return f"{self.last_name}, {self.first_name} {self.ext_name}, {self.middle_name}".strip()
-
     def get_absolute_url(self):
-        return reverse('profile', kwargs={'pk': self.pk})
+        return reverse('user', kwargs={'pk': self.pk})
 
-    def save(self, *args, **kwargs):        # for resizing/downsizing images
-        super(Profile, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):        # for automatically down-sizing images
+        super(User, self).save(*args, **kwargs)
 
         img = Image.open(self.image.path)   # open the image of the current instance
         if img.height > 600 or img.width > 600: # for sizing-down the images to conserve memory in the server
@@ -159,21 +167,44 @@ class Profile(models.Model):
             img.save(self.image.path)
 
 
-    ### These properties will return True if the emp_type of the Profile instance is TEAM_LEADER or OPERATIONS_MGR, respectively, and False otherwise.
-    ### 
-    '''
-    These properties can be used in your views and templates just like any other attribute of the Profile model. For example, you can check if a user is a team leader or operations manager in a template like this:
 
-    {% if user.profile.is_team_leader %}
-        <!-- Display content for team leaders -->
-    {% elif user.profile.is_operations_manager %}
-        <!-- Display content for operations managers -->
-    {% endif %}
-    '''
-    @property
-    def is_team_leader(self):
-        return self.emp_type.name == EmployeeType.Type.TEAM_LEADER if self.emp_type else False
 
-    @property
-    def is_operations_manager(self):
-        return self.emp_type.name == EmployeeType.Type.OPERATIONS_MGR if self.emp_type else False
+
+
+
+### hard-coded version
+# class WorkGroup(models.Model):
+#     SFST    = "Secured Financial Support Team"
+#     UFST    = "UnSecured Financial Support Team"
+#     AUH     = "Australia Collections"
+#     AU      = "Australia"
+#     PH      = "Philippines"
+#     SG      = "Singapore"
+#     MSS     = "Marks & Spencer"
+#     HRS     = "HSBC Repayment Services"
+#     US      = "US"
+#     CANADA  = "CANADA"
+#     OTPA    = "Outcome Testing Policy Adherence"
+
+#     choices = [
+#         (SFST, "SFST"),
+#         (UFST, "UFST"), 
+#         (AUH, "AUH"),
+#         (AU, "AU"),
+#         (PH, "PH"),
+#         (SG, "SG"),
+#         (MSS, "MSS"),
+#         (HRS, "HRS"),
+#         (US, "US"),
+#         (CANADA, "CANADA"),
+#         (OTPA, "OTPA")
+#         ]
+
+
+#     name = models.CharField(blank=True, null=False, max_length=80, choices=choices, default="---", verbose_name="Workgroup: ")
+
+#     class Meta:
+#         verbose_name_plural = "Workgroups"
+
+#     def __str__(self):
+#         return f"{self.name}".strip()

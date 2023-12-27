@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from datetime import timedelta
-from users.models import User, EmployeeType, Profile
+from users.models import User#, EmployeeType, Profile
 
 class LeaveType(models.Model):
     name = models.CharField(max_length=200, verbose_name='Name')

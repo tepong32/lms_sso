@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
 
-from users.models import User, Profile, EmployeeType
+from users.models import User
 from .models import Leave, LeaveCounter
 
 from django.views.generic import (
@@ -17,6 +17,9 @@ from django.views.generic import (
     )
 from .forms import LeaveForm
 
+from django.http import HttpResponse
+from datetime import datetime
+
 
 def homeView(request):
     '''
@@ -25,7 +28,9 @@ def homeView(request):
     '''
     user = User # for listing all the users
     loggedin_user = request.user # for accessing the currently logged-in user's leave instances
-    profile = Profile
+
+    ### displaying server time
+    current_time = datetime.now()
 
     # initializing instances variables
     instances_used_this_year = None
@@ -41,15 +46,17 @@ def homeView(request):
             pass  # leave_counter does not exist for this user
 
     context = {
-        'advisors': Profile.objects.filter(emp_type__name=EmployeeType.Type.ADVISOR),
-        'tls': Profile.objects.filter(emp_type__name=EmployeeType.Type.TEAM_LEADER),
-        'oms': Profile.objects.filter(emp_type__name=EmployeeType.Type.OPERATIONS_MGR),
+        'advisors': user.objects.filter(is_advisor=True),
+        'tls': user.objects.filter(is_team_leader=True),
+        'oms': user.objects.filter(is_operations_manager=True),
         'adv_all_leaves': LeaveCounter.objects.all(),
 
         ### will return leave_counter.instances_used_this_year if leave_counter is not None, and 0 otherwise.
         'instances_used_this_year': getattr(leave_counter, 'instances_used_this_year', 0),
         ### will return leave_counter.instances_used_this_quarter if leave_counter is not None, and 0 otherwise.
         'instances_used_this_quarter': getattr(leave_counter, 'instances_used_this_quarter', 0),
+
+        'server_time': current_time
     }
     return render(request, 'home/authed/home.html', context)
 
@@ -135,7 +142,7 @@ class IncreaseMaxInstancesView(LoginRequiredMixin, UserPassesTestMixin, FormView
     #     return self.request.user.is_staff or self.request.user.profile.emp_type == "Team Leader" or self.request.user.profile.emp_type == "Operations Mgr"
 
     def test_func(self):
-        return self.request.user.is_staff or self.request.user.profile.emp_type in ['Team Leader', 'Manager']
+        return self.request.user.is_staff or self.request.user.is_team_leader or self.request.user.is_operations_manager
 
     def form_valid(self, form):
         year_additional_instances = form.cleaned_data.get('year_additional_instances')
