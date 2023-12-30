@@ -124,38 +124,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     middle_name         = models.CharField(max_length=50, blank=True)
     last_name           = models.CharField(max_length=50)
     ext_name            = models.CharField(max_length=3, blank=True, null=True, verbose_name="Extension")
-    ### this workgroup field uses the get_default_workgroup() above the User class
-    # workgroup           = workgroup = models.ForeignKey(WorkGroup, on_delete=models.SET_DEFAULT, default=get_default_workgroup)
-
-    # SFST    = "Secured Financial Support Team"
-    # UFST    = "UnSecured Financial Support Team"
-    # AUH     = "Australia Collections"
-    # AU      = "Australia"
-    # PH      = "Philippines"
-    # SG      = "Singapore"
-    # MSS     = "Marks & Spencer"
-    # HRS     = "HSBC Repayment Services"
-    # US      = "US"
-    # CANADA  = "CANADA"
-    # OTPA    = "Outcome Testing Policy Adherence"
-
-    # choices = [
-    #     (SFST, "Secured Financial Support Team"),
-    #     (UFST, "UnSecured Financial Support Team"), 
-    #     (AUH, "Australia Collections"),
-    #     (AU, "Australia"),
-    #     (PH, "Philippines"),
-    #     (SG, "Singapore"),
-    #     (MSS, "Marks & Spencer"),
-    #     (HRS, "HSBC Repayment Services"),
-    #     (US, "United States"),
-    #     (CANADA, "Canada"),
-    #     (OTPA, "Outcome Testing Policy Adherence")
-    #     ]
-
-    # workgroup           = models.CharField(max_length=100, choices=choices, default="Default", verbose_name="WorkGroup: ")
-
-
     workgroup           = models.ForeignKey(WorkGroup, on_delete=models.SET_NULL, null=True, blank=False)
     
     objects = CustomUserManager() # set the CustomUserManager() above instead of default UserManager() from django.contrib.auth
