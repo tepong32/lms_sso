@@ -5,7 +5,7 @@
 from django.contrib import admin
 from django.db import models
 
-from .models import User#, WorkGroup, WorkGroupName
+from .models import User, WorkGroup, Manager
 
 
 
@@ -55,6 +55,6 @@ class CustomUserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(User, CustomUserAdmin)
-# admin.site.register(WorkGroup)   #not a separate model anymore
-# admin.site.register(WorkGroupName) #not a separate model anymore
+admin.site.register(WorkGroup)
+admin.site.register(Manager)
 

@@ -53,6 +53,50 @@ class CustomUserManager(UserManager):
         return self._create_user(staff_id, password, **extra_fields)
 
 
+class Manager(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class WorkGroup(models.Model):
+    select = "---select one---"
+    SFST    = "Secured Financial Support Team"
+    UFST    = "UnSecured Financial Support Team"
+    AUH     = "Australia Collections"
+    AU      = "Australia"
+    PH      = "Philippines"
+    SG      = "Singapore"
+    MSS     = "Marks & Spencer"
+    HRS     = "HSBC Repayment Services"
+    US      = "US"
+    CANADA  = "CANADA"
+    OTPA    = "Outcome Testing Policy Adherence"
+
+    choices = [
+        (select, "---select one---"),
+        (SFST, "Secured Financial Support Team"),
+        (UFST, "UnSecured Financial Support Team"), 
+        (AUH, "Australia Collections"),
+        (AU, "Australia"),
+        (PH, "Philippines"),
+        (SG, "Singapore"),
+        (MSS, "Marks & Spencer"),
+        (HRS, "HSBC Repayment Services"),
+        (US, "United States"),
+        (CANADA, "Canada"),
+        (OTPA, "Outcome Testing Policy Adherence")
+        ]
+
+    name = models.CharField(blank=True, null=False, max_length=80, choices=choices, default=select, verbose_name="Workgroup: ")
+    manager = models.ForeignKey(Manager, on_delete=models.SET_NULL, null=True, blank=False)
+    class Meta:
+        verbose_name_plural = "Workgroups"
+
+    def __str__(self):
+        return f"{self.name} - {self.manager}".strip()
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     '''
@@ -83,33 +127,36 @@ class User(AbstractBaseUser, PermissionsMixin):
     ### this workgroup field uses the get_default_workgroup() above the User class
     # workgroup           = workgroup = models.ForeignKey(WorkGroup, on_delete=models.SET_DEFAULT, default=get_default_workgroup)
 
-    SFST    = "Secured Financial Support Team"
-    UFST    = "UnSecured Financial Support Team"
-    AUH     = "Australia Collections"
-    AU      = "Australia"
-    PH      = "Philippines"
-    SG      = "Singapore"
-    MSS     = "Marks & Spencer"
-    HRS     = "HSBC Repayment Services"
-    US      = "US"
-    CANADA  = "CANADA"
-    OTPA    = "Outcome Testing Policy Adherence"
+    # SFST    = "Secured Financial Support Team"
+    # UFST    = "UnSecured Financial Support Team"
+    # AUH     = "Australia Collections"
+    # AU      = "Australia"
+    # PH      = "Philippines"
+    # SG      = "Singapore"
+    # MSS     = "Marks & Spencer"
+    # HRS     = "HSBC Repayment Services"
+    # US      = "US"
+    # CANADA  = "CANADA"
+    # OTPA    = "Outcome Testing Policy Adherence"
 
-    choices = [
-        (SFST, "Secured Financial Support Team"),
-        (UFST, "UnSecured Financial Support Team"), 
-        (AUH, "Australia Collections"),
-        (AU, "Australia"),
-        (PH, "Philippines"),
-        (SG, "Singapore"),
-        (MSS, "Marks & Spencer"),
-        (HRS, "HSBC Repayment Services"),
-        (US, "United States"),
-        (CANADA, "Canada"),
-        (OTPA, "Outcome Testing Policy Adherence")
-        ]
+    # choices = [
+    #     (SFST, "Secured Financial Support Team"),
+    #     (UFST, "UnSecured Financial Support Team"), 
+    #     (AUH, "Australia Collections"),
+    #     (AU, "Australia"),
+    #     (PH, "Philippines"),
+    #     (SG, "Singapore"),
+    #     (MSS, "Marks & Spencer"),
+    #     (HRS, "HSBC Repayment Services"),
+    #     (US, "United States"),
+    #     (CANADA, "Canada"),
+    #     (OTPA, "Outcome Testing Policy Adherence")
+    #     ]
 
-    workgroup           = models.CharField(max_length=100, choices=choices, default="Default", verbose_name="WorkGroup: ")
+    # workgroup           = models.CharField(max_length=100, choices=choices, default="Default", verbose_name="WorkGroup: ")
+
+
+    workgroup           = models.ForeignKey(WorkGroup, on_delete=models.SET_NULL, null=True, blank=False)
     
     objects = CustomUserManager() # set the CustomUserManager() above instead of default UserManager() from django.contrib.auth
 
@@ -145,46 +192,3 @@ class User(AbstractBaseUser, PermissionsMixin):
             output_size = (600, 600)
             img.thumbnail(output_size)
             img.save(self.image.path)
-
-
-
-
-
-
-
-### hard-coded version
-# class WorkGroup(models.Model):
-#     SFST    = "Secured Financial Support Team"
-#     UFST    = "UnSecured Financial Support Team"
-#     AUH     = "Australia Collections"
-#     AU      = "Australia"
-#     PH      = "Philippines"
-#     SG      = "Singapore"
-#     MSS     = "Marks & Spencer"
-#     HRS     = "HSBC Repayment Services"
-#     US      = "US"
-#     CANADA  = "CANADA"
-#     OTPA    = "Outcome Testing Policy Adherence"
-
-#     choices = [
-#         (SFST, "SFST"),
-#         (UFST, "UFST"), 
-#         (AUH, "AUH"),
-#         (AU, "AU"),
-#         (PH, "PH"),
-#         (SG, "SG"),
-#         (MSS, "MSS"),
-#         (HRS, "HRS"),
-#         (US, "US"),
-#         (CANADA, "CANADA"),
-#         (OTPA, "OTPA")
-#         ]
-
-
-#     name = models.CharField(blank=True, null=False, max_length=80, choices=choices, default="---", verbose_name="Workgroup: ")
-
-#     class Meta:
-#         verbose_name_plural = "Workgroups"
-
-#     def __str__(self):
-#         return f"{self.name}".strip()
