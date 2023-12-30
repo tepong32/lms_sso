@@ -1,15 +1,18 @@
 from django import forms
-from .models import User#, WorkGroup
+from .models import User
 
 from django.contrib.auth.forms import UserCreationForm
 
 
+'''
+	These forms are the ones the users will be using when registering or updating their account info.
+	They will be specifically added to their respective views, in our case:
+	
+	user.views.register > UserRegisterForm
+	user.views.profileEditView > UserUpdateForm
+'''
 
 class UserRegisterForm(UserCreationForm):
-	'''
-		these form fields take arguments (required=true/false).
-		by default, required=true
-	'''
 	email = forms.EmailField() # to make sure they will be using a valid email address format
 
 	class Meta:
@@ -18,10 +21,6 @@ class UserRegisterForm(UserCreationForm):
 
 
 class UserUpdateForm(forms.ModelForm):
-	'''
-		these form fields take arguments (required=true/false).
-		by default, required=true
-	'''
 	email = forms.EmailField() # to make sure they will be using a valid email address format
 
 	class Meta:
