@@ -4,11 +4,6 @@
 		then you can actually just go to "env/site-packages/django/contrib/auth/templates/registration/" to copy or modify the templates directly (copying preferred. why? Think about it! ;)). No need to create new ones. LOL!
 
 
-comment-out the ff when creating a superuser for the first time:
-	apps.py 					def ready(self):
-	models.py & forms.py 		"workgroup" field
-  	CHANGE user.is_active to TRUE for the superuser
 
-  	create a WorkGroupName "Default", then all the other workgroups needed ---dito sa id nito nagpe-fail e
 
 

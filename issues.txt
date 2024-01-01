@@ -13,7 +13,7 @@ DRF API views need to have urls using <staff_id> as opposed to currently used <p
 
 	Could not resolve URL for hyperlinked relationship using view name "user-detail". You may have failed to include the related model in your API, or incorrectly configured the `lookup_field` attribute on this field."
 
-reset_counters() not triggering
+reset_counters() not triggering was because it cannot be automatically set thru django. It needs to be a CRON JOB.
 
 
 
@@ -36,3 +36,6 @@ dapat mai-loop yung instances(days) ng leave requests sa admin side UI para maka
 
 
 admin > groups >specific page for members of the leaveCounterAdjuster group
+
+
+a function to turn range dates for leave applications to a for-loop (perhaps?) so, they can be approved/rejected individually
