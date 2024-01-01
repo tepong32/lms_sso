@@ -91,6 +91,8 @@ class WorkGroup(models.Model):
 
     name = models.CharField(blank=True, null=False, max_length=80, choices=choices, default=select, verbose_name="Workgroup: ")
     manager = models.ForeignKey(Manager, on_delete=models.SET_NULL, null=True, blank=False)
+    ### setting max_allowable leaves per "cluster"/OM
+    allowed_leaves_per_day = models.PositiveIntegerField(max_length=2)
     class Meta:
         verbose_name_plural = "Workgroups"
 
