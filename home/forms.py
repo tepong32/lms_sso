@@ -43,6 +43,19 @@ class LeaveForm(forms.ModelForm):
 
         return cleaned_data
 
+    def save(self, commit=True):
+        # Call the original save method
+        leave = super().save(commit=False)
+
+        # Call the auto_approve method to check if there are still allowed leaves for the day
+        leave.auto_approve()
+
+        # Commit the changes if specified
+        if commit:
+            leave.save()
+
+        return leave
+
 
 class IncreaseMaxInstancesForm(forms.Form):
     ''' See utils.py '''

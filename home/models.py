@@ -25,6 +25,18 @@ class Leave(models.Model):
     def __str__(self):
         return f"{self.employee} - {self.leave_type} ({self.status})"
 
+    def auto_approve(self):
+        # Get the WorkGroup of the employee
+        workgroup = self.employee.workgroup
+
+        # Get the number of leaves taken on the day the leave is filed
+        leaves_taken = Leave.objects.filter(employee__workgroup=workgroup, start_date=self.start_date, status='approved').count()
+
+        # If the number of leaves taken is less than the allowed leaves per day, set the status to 'approved'
+        if leaves_taken < workgroup.allowed_leaves_per_day:
+            self.status = 'approved'
+            self.save()
+
     def save(self, *args, **kwargs):
         # Check if the status has changed to 'approved'
         if self.pk is not None:
@@ -53,17 +65,18 @@ class LeaveCounter(models.Model):
     last_quarter_reset_date = models.DateField(null=True, blank=True, verbose_name='Last Quarter Reset Date')
     additional_instances_per_year = models.PositiveIntegerField(default=0, verbose_name='Additional Instances Per Year')
     additional_instances_per_quarter = models.PositiveIntegerField(default=0, verbose_name='Additional Instances Per Quarter')
+    reset_this_quarter = models.BooleanField(default=False) # safety net to ensure that the reset will only be done once per quarter
 
     def save(self, *args, **kwargs):
         self.max_instances_per_year += self.additional_instances_per_year
         self.max_instances_per_quarter += self.additional_instances_per_quarter
         ### if we need to set the attributes to 0 again after adding counts to the max_instances, uncomment the 2 lines below
-        # self.additional_instances_per_year = 0
-        # self.additional_instances_per_quarter = 0
+        self.additional_instances_per_year = 0
+        self.additional_instances_per_quarter = 0
 
-        ### this is just used to test if the reset_counters() is working correctly. comment-out the lines above
-        ### error shows cannot compare datetime.datetime to datetime.date
-        # self.reset_counters() 
+        if not self.reset_this_quarter:
+            ### "If the reset_this_quarter==False, call the reset_counters()"
+            self.reset_counters()
         super().save(*args, **kwargs)
 
 
@@ -95,22 +108,23 @@ class LeaveCounter(models.Model):
         current_year = now.year
         current_quarter = (now.month - 1) // 3 + 1
         quarter_start_month = (current_quarter - 1) * 3 + 1
-        quarter_start_date = now.replace(month=quarter_start_month, day=1)
+        quarter_start_date = now.replace(month=quarter_start_month, day=1).date() # converting quarter_start_date to datetime.date because "now.replace()" uses datetime.datetime"
 
         if self.last_year_reset_date is None or self.last_year_reset_date < quarter_start_date:
             self.instances_used_this_year = 0
             self.last_year_reset_date = quarter_start_date
-            self.max_instances_per_year = 6
+            self.max_instances_per_year = self.max_instances_per_year
             self.additional_instances_per_quarter = 0
 
         if self.last_quarter_reset_date is None or self.last_quarter_reset_date < quarter_start_date:
             # Before resetting the instances_used_this_quarter, calculate the unused instances and add them to max_instances_per_quarter
             unused_instances = self.max_instances_per_quarter - self.instances_used_this_quarter
-            self.max_instances_per_quarter = 6 + unused_instances  # Reset max_instances_per_quarter to 6 plus any unused instances
+            self.max_instances_per_quarter = self.max_instances_per_quarter + unused_instances  # Reset max_instances_per_quarter to 6 plus any unused instances
 
             self.instances_used_this_quarter = 0
             self.last_quarter_reset_date = quarter_start_date
             self.additional_instances_per_quarter = 0
+            self.reset_this_quarter = True ### setting this to true on save of this reset_counters() to make sure it'll only happen once per quarter
         self.save()
 
     ### properties added to consider additional_instances of Leaves (admin-editable only)
