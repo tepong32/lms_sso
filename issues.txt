@@ -13,29 +13,29 @@ DRF API views need to have urls using <staff_id> as opposed to currently used <p
 
 	Could not resolve URL for hyperlinked relationship using view name "user-detail". You may have failed to include the related model in your API, or incorrectly configured the `lookup_field` attribute on this field."
 
-reset_counters() not triggering was because it cannot be automatically set thru django. It needs to be a CRON JOB.
 
 
 
 
 
 
-tie-up OM names to WorkGroup
-admin/OMs can allocate leave counts per cluster
 
-check cluster allocation (daily):
-	pag meron + may ununsed_instances_per_quarter =+ >7 days prior to target date: auto-approved
-	pag hinde, balik sa auto-pending status
+dapat mai-loop yung instances(days) ng leave requests sa admin side UI para makapag approve/reject ng specific days
+a function to turn range dates for leave applications to a for-loop (perhaps?) so, they can be approved/rejected individually
+
+admin > groups >specific page for members of the leaveCounterAdjuster group
+
+
+
 
 
 
 leave model dapat may timestamp for displaying who filed the request first
 reference kung kailan nag-file
+handle the message notif for auto-approve leaves or leave statuses in the view (formview yata?)
+add display counts for allowed_leaves_per_day and remaining allowed_leaves_per_day
+check cluster allocation (daily):
+	pag meron + may ununsed_instances_per_quarter: auto-approved
+	hindi na lang naiimplement yung >7days prior to target date
 
-dapat mai-loop yung instances(days) ng leave requests sa admin side UI para makapag approve/reject ng specific days
-
-
-admin > groups >specific page for members of the leaveCounterAdjuster group
-
-
-a function to turn range dates for leave applications to a for-loop (perhaps?) so, they can be approved/rejected individually
+reset_counters() not triggering was because it cannot be automatically set thru django. It needs to be a CRON JOB.
