@@ -8,7 +8,7 @@ from django.utils import timezone
 def check_reset_dates(sender, instance, **kwargs):
     # Check if today's date matches reset dates
     '''
-        This function automatically checks for certain dates to trigger the reset_counters() of the LeaveCounter model
+        This function automatically checks for certain dates (every 1st day of the 1st month of the quarter) to trigger the reset_counters() of the LeaveCounter model
         Do not forget to connect signal this to apps.py
     '''
     today = timezone.now().date()
@@ -26,7 +26,7 @@ def create_or_update_leave_counter(sender, instance, created, **kwargs):
         decrease when an approved leave is deleted or its status changes,
         and stay the same when a leave that is not approved is updated.
     '''
-    leave_counter = LeaveCounter.objects.get(employee=instance.employee)
+    leave_counter, created = LeaveCounter.objects.get_or_create(employee=instance.employee)
     leave_duration = (instance.end_date - instance.start_date).days + 1 # Include both start and end dates
     if created:
         if instance.status == 'approved':
@@ -45,7 +45,7 @@ def create_or_update_leave_counter(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=Leave)
 def delete_leave_counter(sender, instance, **kwargs):
-    leave_counter = LeaveCounter.objects.get(employee=instance.employee)
+    leave_counter, created = LeaveCounter.objects.get_or_create(employee=instance.employee)
     leave_duration = (instance.end_date - instance.start_date).days + 1 # Include both start and end dates
     leave_counter.instances_used_this_year -= leave_duration
     leave_counter.instances_used_this_quarter -= leave_duration

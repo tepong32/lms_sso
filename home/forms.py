@@ -19,7 +19,7 @@ class LeaveForm(forms.ModelForm):
     
     class Meta:
         model = Leave
-        fields = ['leave_type', 'start_date', 'end_date']
+        fields = ['leave_type', 'start_date', 'end_date', 'note']
 
     def __init__(self, *args, **kwargs):
         self.employee = kwargs.pop('employee', None)

@@ -21,6 +21,9 @@ class Leave(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending', verbose_name='Status')
     start_date = models.DateField(verbose_name='Start Date')
     end_date = models.DateField(verbose_name='End Date')
+    note = models.TextField(null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True, null=True)
+    modified = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f"{self.employee} - {self.leave_type} ({self.status})"
@@ -40,8 +43,9 @@ class Leave(models.Model):
     def save(self, *args, **kwargs):
         # Check if the status has changed to 'approved'
         if self.pk is not None:
-            orig = Leave.objects.get(pk=self.pk)
-            if orig.status != self.status and self.status == 'approved':
+            # orig = Leave.objects.get(pk=self.pk)
+            # if orig.status != self.status and self.status == 'approved':
+            if self.status == 'approved':
                 # Update LeaveCounter only when leave is approved
                 leave_counter, _ = LeaveCounter.objects.get_or_create(employee=self.employee)
                 leave_duration = self.end_date - self.start_date + timedelta(days=1) # Include both start and end dates
@@ -49,7 +53,10 @@ class Leave(models.Model):
                 leave_counter.instances_used_this_quarter += leave_duration.days
                 leave_counter.save()
 
-        super().save(*args, **kwargs)
+        # Save the instance
+        super_result = super().save(*args, **kwargs)
+
+        return super_result
 
 class LeaveCounter(models.Model):
     '''
@@ -65,7 +72,9 @@ class LeaveCounter(models.Model):
     last_quarter_reset_date = models.DateField(null=True, blank=True, verbose_name='Last Quarter Reset Date')
     additional_instances_per_year = models.PositiveIntegerField(default=0, verbose_name='Additional Instances Per Year')
     additional_instances_per_quarter = models.PositiveIntegerField(default=0, verbose_name='Additional Instances Per Quarter')
-    reset_this_quarter = models.BooleanField(default=False) # safety net to ensure that the reset will only be done once per quarter
+
+    ### safety net to ensure that the reset will only be done once per quarter
+    reset_this_quarter = models.BooleanField(default=False) 
 
     def save(self, *args, **kwargs):
         self.max_instances_per_year += self.additional_instances_per_year
@@ -110,19 +119,19 @@ class LeaveCounter(models.Model):
         quarter_start_month = (current_quarter - 1) * 3 + 1
         quarter_start_date = now.replace(month=quarter_start_month, day=1).date() # converting quarter_start_date to datetime.date because "now.replace()" uses datetime.datetime"
 
-        if self.last_year_reset_date is None or self.last_year_reset_date < quarter_start_date:
+        if self.last_year_reset_date is None or self.last_year_reset_date < current_year:
             self.instances_used_this_year = 0
-            self.last_year_reset_date = quarter_start_date
+            self.last_year_reset_date = current_year
             self.max_instances_per_year = self.max_instances_per_year
             self.additional_instances_per_quarter = 0
-
+            
         if self.last_quarter_reset_date is None or self.last_quarter_reset_date < quarter_start_date:
             # Before resetting the instances_used_this_quarter, calculate the unused instances and add them to max_instances_per_quarter
             unused_instances = self.max_instances_per_quarter - self.instances_used_this_quarter
-            self.max_instances_per_quarter = self.max_instances_per_quarter + unused_instances  # Reset max_instances_per_quarter to 6 plus any unused instances
+            self.max_instances_per_quarter = self.max_instances_per_quarter + unused_instances  ### Reset max_instances_per_quarter to default value plus any unused instances
 
             self.instances_used_this_quarter = 0
-            self.last_quarter_reset_date = quarter_start_date
+            self.last_quarter_reset_date = quarter_start_date ### changing the current quarter as the new quarter_start_date
             self.additional_instances_per_quarter = 0
             self.reset_this_quarter = True ### setting this to true on save of this reset_counters() to make sure it'll only happen once per quarter
         self.save()
