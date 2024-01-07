@@ -92,7 +92,13 @@ class WorkGroup(models.Model):
     name = models.CharField(blank=True, null=False, max_length=80, choices=choices, default=select, verbose_name="Workgroup: ")
     manager = models.ForeignKey(Manager, on_delete=models.SET_NULL, null=True, blank=False)
     ### setting max_allowable leaves per "cluster"/OM
-    allowed_leaves_per_day = models.PositiveIntegerField(max_length=2)
+    allowed_leaves_per_day = models.PositiveIntegerField(null=True, blank=True, default=20,
+        help_text='''
+            This will help with auto-approve leave requests.
+            Computation will be: allowed leaves - approved leaves for the day. If there are still available allowed_leaves_per_day instances, the leave requests will be auto-approved.
+            If there are none, the leave status will just be set to default: "Pending".
+        ''')
+    
     class Meta:
         verbose_name_plural = "Workgroups"
 
