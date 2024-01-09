@@ -4,6 +4,19 @@
 
 testing filters: <br>
 <h4>advisors list</h4>
+<p>Kung need mo ay User info:</p>
+<p>
+	all users: <b>user.objects.all()</b> or <b>advisors</b><br>
+	<b>advisors</b>: user.objects.filter(is_advisor=True)<br>
+    <b>tls</b>: user.objects.filter(is_team_leader=True)<br>
+    <b>oms</b>: user.objects.filter(is_operations_manager=True),<br>
+    <b>instances_used_this_year</b>: <br>
+    <b>instances_used_this_quarter</b>: <br>
+</p>
+<hr>
+
+<p>naka for loop to na <b>advisors</b> list. Display == last_name, first_name: <br>
+<small>by default, kahit TL or OM, advisor din since yun ung default pag nagregister pero pwede iedit sa admin. Boolean lang naman yun</small> <br>
 {% for adv in advisors %}
 	{% if adv.last_name and adv.first_name %}
 		<a href="{% url 'profile' adv.staff_id %}"> {{adv.last_name}}, {{adv.first_name}}</a>
@@ -13,35 +26,51 @@ testing filters: <br>
 		<small>( <-- this user has no profile yet so, staff ID!)</small>
 	{% endif %}
 {% endfor %}
-<hr>
+</p>
 
-<h4>team leaders list</h4>
+<hr>
+<p>naka for loop to na <b>tls</b> list. Display == last_name, first_name: <br>
 {% for tl in tls %}
 <a href="{% url 'profile' tl.staff_id %}"> {{tl.last_name}}, {{tl.first_name}}</a>
 {% endfor %}
+</p>
 <hr>
 
-<h4>operations managers list</h4>
+<p>naka for loop to na <b>oms</b> list. Display == last_name, first_name: <br>
 {% for om in oms %}
 <a href="{% url 'profile' om.staff_id %}">{{om.last_name}}, {{om.first_name}}</a>
 {% endfor %}
+</p>
 <hr>
-<h3>the current user's instances used:</h3>
+
+<p><b>Logged-in user</b>'s instances-used counter: <br>
 {% if instances_used_this_year and instances_used_this_quarter %}
     <p>Instances used this year: {{ instances_used_this_year }}</p>
     <p>Instances used this quarter: {{ instances_used_this_quarter }}</p>
 {% else %}
     <p>No leave counter data available for this user.</p>
 {% endif %}
-<div class="card">
-	leave counter per employee:
-	<small>this displays counter only for employees who already have approved leaves.
-	Apply filters to display all employees, leaves, statuses and counters </small><br>
-	{% for leave_counter in adv_all_leaves %}
-	    <p><a href="{% url 'profile' leave_counter.employee.staff_id %}">{{ leave_counter.employee.staff_id }}</a>: This Quarter: {{ leave_counter.instances_used_this_quarter }},
-	    This Year (total):{{ leave_counter.instances_used_this_year }}</p>
-	{% endfor %}
-</div>
+</p>
+<hr>
 
-<div>SERVER TIME: {{server_time}} </div>
+<p>leave counter per employee:
+<small>this displays counters for all employees
+Apply filters to display all employees, leaves, statuses and counters </small><br>
+{% for leave_counter in adv_all_leaves %}
+    <p><a href="{% url 'profile' leave_counter.employee.staff_id %}">{{ leave_counter.employee.staff_id }}</a>: This Quarter: {{ leave_counter.instances_used_this_quarter }},
+    This Year (total):{{ leave_counter.instances_used_this_year }}</p>
+{% endfor %}
+</p>
+<hr>
+
+<p><b>Leave</b> instances: <br>
+{% for leave in leaves %}
+	from: {{leave.start_date}} to: {{leave.end_date}} - {{leave.leave_type}} - {{leave.employee}} - Status: {{leave.status}} <br>
+	submitted: {{leave.created}}, modified {{leave.modified}} <br>
+	note: {{leave.note}}
+{% endfor %}
+	
+</p>
+
+<div class="card float-right col-2 elevation-3">SERVER TIME: {{server_time}} </div>
 {% endblock content %}

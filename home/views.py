@@ -57,9 +57,12 @@ def homeView(request):
         ### will return leave_counter.instances_used_this_quarter if leave_counter is not None, and 0 otherwise.
         'instances_used_this_quarter': getattr(leave_counter, 'instances_used_this_quarter', 0),
 
+        'leaves': Leave.objects.all(),
+
         'server_time': current_time
     }
-    return render(request, 'home/authed/home.html', context)
+    return render(request, 'home/authed/home.html', context) ### change this to a "base" page that separates view (thru include) for authed vs unauthed users
+    ### this works for now as we just need to have the data/info displayed
 
 
 

@@ -20,10 +20,10 @@ def check_reset_dates(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=User)
-'''
-    Creating a LeaveCounter instance for every User that registers
-'''
 def create_leave_counter(sender, instance, created, **kwargs):
+    '''
+        Creating a LeaveCounter instance for every User that registers
+    '''
     if created:
         LeaveCounter.objects.create(employee=instance)
 
