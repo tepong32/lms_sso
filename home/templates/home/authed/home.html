@@ -19,10 +19,10 @@ testing filters: <br>
 <small>by default, kahit TL or OM, advisor din since yun ung default pag nagregister pero pwede iedit sa admin. Boolean lang naman yun</small> <br>
 {% for adv in advisors %}
 	{% if adv.last_name and adv.first_name %}
-		<a href="{% url 'profile' adv.staff_id %}"> {{adv.last_name}}, {{adv.first_name}}</a>
+		<a href="{% url 'profile' adv.staff_id %}"> {{adv}} </a>
 		<br>	
 	{% else %}
-		<a href="{% url 'profile' adv.staff_id %}">{{adv.user.staff_id}}</a>
+		<a href="{% url 'profile' adv.staff_id %}">{{adv}}</a>
 		<small>( <-- this user has no profile yet so, staff ID!)</small>
 	{% endif %}
 {% endfor %}
@@ -31,14 +31,14 @@ testing filters: <br>
 <hr>
 <p>naka for loop to na <b>tls</b> list. Display == last_name, first_name: <br>
 {% for tl in tls %}
-<a href="{% url 'profile' tl.staff_id %}"> {{tl.last_name}}, {{tl.first_name}}</a>
+<a href="{% url 'profile' tl.staff_id %}"> {{tl}}</a>
 {% endfor %}
 </p>
 <hr>
 
 <p>naka for loop to na <b>oms</b> list. Display == last_name, first_name: <br>
 {% for om in oms %}
-<a href="{% url 'profile' om.staff_id %}">{{om.last_name}}, {{om.first_name}}</a>
+<a href="{% url 'profile' om.staff_id %}">{{om}}</a>
 {% endfor %}
 </p>
 <hr>
