@@ -145,7 +145,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         
     def __str__(self):
         if {self.last_name} and {self.first_name}:
-            return f"{self.last_name}, {self.first_name} {self.ext_name}, {self.middle_name}".strip()
+            return f"{self.last_name}, {self.first_name}".strip().title()
         else:
             return str(self.staff_id)
 
