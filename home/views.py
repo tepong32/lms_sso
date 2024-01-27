@@ -2,12 +2,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-
+from django.contrib.auth.decorators import login_required
 
 from users.models import User
 from .models import Leave, LeaveCounter
 
 from django.views.generic import (
+    TemplateView,
     ListView,
     DetailView,
     CreateView,
@@ -19,53 +20,48 @@ from .forms import LeaveForm
 
 from django.http import HttpResponse
 from datetime import datetime
+from django.utils import timezone
 
 
-def homeView(request):
-    '''
-        Currently listing all possible APIs here.
-        Will need to separate them thru views after confirming they all work as intended.
-    '''
-    user = User # for listing all the users
-    loggedin_user = request.user # for accessing the currently logged-in user's leave instances
+class HomeView(LoginRequiredMixin, TemplateView):
+    template_name = 'home/authed/home.html'
 
-    ### displaying server time
-    current_time = datetime.now()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = User
+        loggedin_user = self.request.user
 
-    # initializing instances variables
-    instances_used_this_year = None
-    instances_used_this_quarter = None
-    leave_counter = None
+        current_time = timezone.now()
 
-    if loggedin_user.is_authenticated:
-        try:
-            leave_counter = LeaveCounter.objects.get(employee=loggedin_user)
-            instances_used_this_year = leave_counter.instances_used_this_year
-            instances_used_this_quarter = leave_counter.instances_used_this_quarter
-        except LeaveCounter.DoesNotExist:
-            pass  # leave_counter does not exist for this user
+        instances_used_this_year = None
+        instances_used_this_quarter = None
+        leave_counter = None
+        user_leaves = None  # Initialize user_leaves
 
-    context = {
+        if loggedin_user.is_authenticated:
+            try:
+                leave_counter = LeaveCounter.objects.get(employee=loggedin_user)
+                instances_used_this_year = leave_counter.instances_used_this_year
+                instances_used_this_quarter = leave_counter.instances_used_this_quarter
+                user_leaves = Leave.objects.filter(employee=loggedin_user)  # Filter the leaves of the current user
+            except LeaveCounter.DoesNotExist:
+                pass
 
-        'advisors': user.objects.filter(is_advisor=True),
-        'tls': user.objects.filter(is_team_leader=True),
-        'oms': user.objects.filter(is_operations_manager=True),
-        'adv_all_leaves': LeaveCounter.objects.all(),
+        context.update({
+            'advisors': user.objects.filter(is_advisor=True),
+            'tls': user.objects.filter(is_team_leader=True),
+            'oms': user.objects.filter(is_operations_manager=True),
+            'adv_all_leaves': LeaveCounter.objects.all(),
+            'instances_used_this_year': getattr(leave_counter, 'instances_used_this_year', 0), ### will return leave_counter.instances_used_this_year if leave_counter is not None, and 0 otherwise.
+            'instances_used_this_quarter': getattr(leave_counter, 'instances_used_this_quarter', 0),
+            'leaves': Leave.objects.all(),
+            'user_leaves': user_leaves,  # Add user_leaves to the context
+            'leave_counter': leave_counter,
+            'server_time': current_time
+        })
 
-        ### will return leave_counter.instances_used_this_year if leave_counter is not None, and 0 otherwise.
-        'instances_used_this_year': getattr(leave_counter, 'instances_used_this_year', 0),
-        ### will return leave_counter.instances_used_this_quarter if leave_counter is not None, and 0 otherwise.
-        'instances_used_this_quarter': getattr(leave_counter, 'instances_used_this_quarter', 0),
-
-        'leaves': Leave.objects.all(),
-        'ownLeaves': Leave.objects.filter(employee=request.user),
-        'leave_counter': leave_counter,
-
-        'server_time': current_time
-    }
-    return render(request, 'home/authed/home.html', context) ### change this to a "base" page that separates view (thru include) for authed vs unauthed users
-    ### this works for now as we just need to have the data/info displayed
-
+        return context
+        
 
 
 class ApplyLeaveView(LoginRequiredMixin, CreateView):       
@@ -169,7 +165,7 @@ class LeaveDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         instances_used_this_quarter = leave_counter.instances_used_this_quarter
         data['instances_used_this_quarter'] = instances_used_this_quarter
         return data
-        
+
     def form_valid(self, form):
         form.instance.employee = self.request.user
         return super().form_valid(form)
