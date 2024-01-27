@@ -58,6 +58,8 @@ def homeView(request):
         'instances_used_this_quarter': getattr(leave_counter, 'instances_used_this_quarter', 0),
 
         'leaves': Leave.objects.all(),
+        'ownLeaves': Leave.objects.filter(employee=request.user),
+        'leave_counter': leave_counter,
 
         'server_time': current_time
     }
@@ -87,6 +89,12 @@ class ApplyLeaveView(LoginRequiredMixin, CreateView):
         data = super().get_context_data(**kwargs)
         leave_counter, _ = LeaveCounter.objects.get_or_create(employee=self.request.user)
         data['leave_counter'] = leave_counter
+        server_time = datetime.now()
+        data['server_time'] = server_time
+        instances_used_this_year = leave_counter.instances_used_this_year
+        data['instances_used_this_year'] = instances_used_this_year
+        instances_used_this_quarter = leave_counter.instances_used_this_quarter
+        data['instances_used_this_quarter'] = instances_used_this_quarter
         return data
 
     def form_valid(self, form):
@@ -115,6 +123,12 @@ class LeaveUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         data = super().get_context_data(**kwargs)
         leave_counter, _ = LeaveCounter.objects.get_or_create(employee=self.request.user)
         data['leave_counter'] = leave_counter
+        server_time = datetime.now()
+        data['server_time'] = server_time
+        instances_used_this_year = leave_counter.instances_used_this_year
+        data['instances_used_this_year'] = instances_used_this_year
+        instances_used_this_quarter = leave_counter.instances_used_this_quarter
+        data['instances_used_this_quarter'] = instances_used_this_quarter
         return data
 
     def form_valid(self, form):         
@@ -134,6 +148,28 @@ class LeaveDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     template_name = 'home/authed/delete_leave_form.html'
     success_url = '/'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'employee': self.request.user})
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        '''
+            The get_context_data method is used to add additional context variables to the template.
+            If you’re using the leave_counter variable in your template, then you should keep this method.
+            This method ensures that a LeaveCounter object is created for every user when they access the view.
+        '''
+        data = super().get_context_data(**kwargs)
+        leave_counter, _ = LeaveCounter.objects.get_or_create(employee=self.request.user)
+        data['leave_counter'] = leave_counter
+        server_time = datetime.now()
+        data['server_time'] = server_time
+        instances_used_this_year = leave_counter.instances_used_this_year
+        data['instances_used_this_year'] = instances_used_this_year
+        instances_used_this_quarter = leave_counter.instances_used_this_quarter
+        data['instances_used_this_quarter'] = instances_used_this_quarter
+        return data
+        
     def form_valid(self, form):
         form.instance.employee = self.request.user
         return super().form_valid(form)
@@ -163,6 +199,28 @@ class IncreaseMaxInstancesView(LoginRequiredMixin, UserPassesTestMixin, FormView
 
     def test_func(self):
         return self.request.user.is_staff or self.request.user.is_team_leader or self.request.user.is_operations_manager
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'employee': self.request.user})
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        '''
+            The get_context_data method is used to add additional context variables to the template.
+            If you’re using the leave_counter variable in your template, then you should keep this method.
+            This method ensures that a LeaveCounter object is created for every user when they access the view.
+        '''
+        data = super().get_context_data(**kwargs)
+        leave_counter, _ = LeaveCounter.objects.get_or_create(employee=self.request.user)
+        data['leave_counter'] = leave_counter
+        server_time = datetime.now()
+        data['server_time'] = server_time
+        instances_used_this_year = leave_counter.instances_used_this_year
+        data['instances_used_this_year'] = instances_used_this_year
+        instances_used_this_quarter = leave_counter.instances_used_this_quarter
+        data['instances_used_this_quarter'] = instances_used_this_quarter
+        return data
 
     def form_valid(self, form):
         year_additional_instances = form.cleaned_data.get('year_additional_instances')
