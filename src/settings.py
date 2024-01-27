@@ -52,8 +52,6 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'home.apps.HomeConfig',
     'users.apps.UsersConfig',
-
-    
 ]
 
 ### some defaults to make the project work ###
@@ -61,8 +59,6 @@ SITE_ID = 1
 ### this next line is needed for custom user models to work on django
 ### see https://www.youtube.com/watch?v=mndLkCEiflg 1:30 mark
 AUTH_USER_MODEL='users.User'
-
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -175,8 +171,6 @@ LOGIN_URL = '/login/' # this should explicitly be "/login/" as it is an absolute
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'     # for the css of crispy forms
 PASSWORD_RESET_CONFIRM_TEMPLATE = '/password-reset/password-reset-confirm.html'
-
-
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
