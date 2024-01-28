@@ -22,12 +22,14 @@
     </fieldset>
     {{form.errors}}
     <small>
-      <p>These max values can be overriden/changed by site administrators</p>
+      <!-- removed these counters as they're already on the dashboard_links.html -->
+      <!-- <p>These max values can be overriden/changed by site administrators</p>
       <p>Total instances per year: <b class="text-dark">{{ leave_counter.max_instances_per_year }}</b></p>
       <p>Instances used this year: <b>{{ leave_counter.instances_used_this_year }}</b></p>
       <p>Total approved per quarter: <b class="text-dark">{{ leave_counter.max_instances_per_quarter }}</b></p>
       <p>Instances used this quarter: <b>{{ leave_counter.instances_used_this_quarter }}</b></p>
-    </small>
+    </small> -->
+    maybe what I should put here is a dynamic counter for auto-approved slots depending on the dates selected on the start_date and end_date fields?
     <div class="form-group">
       <button class="btn btn-success" type="submit">Submit request</button>
     </div>
