@@ -14,4 +14,5 @@ Duplicating working instances:
 
 Major Updates:
 Leave.auto-approve() now working as intended. Conditions: Still has cluster allocated counts remaining and request filed is >7 days from filing date. :)
+	still, decrements are not working. manual interventions needed as far as cancellations and/or deletions of Leave requests are concerned.
 
