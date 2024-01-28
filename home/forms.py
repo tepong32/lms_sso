@@ -36,10 +36,10 @@ class LeaveForm(forms.ModelForm):
             leave_duration = (end_date - start_date).days + 1
 
             if leave_counter.instances_used_this_year + leave_duration > leave_counter.max_instances_per_year:
-                raise ValidationError("You have reached or are about to exceed the allowed instances per year. /nPlease coordinate with your immediate supervisor if you need adjustments.")
+                raise ValidationError("You have reached or are about to exceed the allowed instances per year. \nPlease coordinate with your immediate supervisor if you need adjustments.")
 
             if leave_counter.instances_used_this_quarter + leave_duration > leave_counter.max_instances_per_quarter:
-                raise ValidationError("You have reached or are about to exceed the allowed instances per quarter. /nPlease coordinate with your immediate supervisor if you need adjustments.")
+                raise ValidationError("You have reached or are about to exceed the allowed instances per quarter. \nPlease coordinate with your immediate supervisor if you need adjustments.")
 
         return cleaned_data
 
