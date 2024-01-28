@@ -196,11 +196,6 @@ class IncreaseMaxInstancesView(LoginRequiredMixin, UserPassesTestMixin, FormView
     def test_func(self):
         return self.request.user.is_staff or self.request.user.is_team_leader or self.request.user.is_operations_manager
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update({'employee': self.request.user})
-        return kwargs
-
     def get_context_data(self, **kwargs):
         '''
             The get_context_data method is used to add additional context variables to the template.

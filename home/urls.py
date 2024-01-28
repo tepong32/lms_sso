@@ -1,7 +1,7 @@
 from django.urls import path
 # from django documentation -- check CoreyMS' django tutorial Part 8 / 22:30
 from .views import (
-    homeView,
+    HomeView,
     ApplyLeaveView,
     LeaveUpdateView,
     LeaveDeleteView,
@@ -13,7 +13,7 @@ from .views import (
 
 
 urlpatterns = [
-    path('', homeView, name='home'),
+    path('', HomeView.as_view(), name='home'),
     path('apply-leave/', ApplyLeaveView.as_view(), name='apply-leave'),
     path('leaves/<int:pk>/update/', LeaveUpdateView.as_view(), name='update-leave'),
     path('leaves/<int:pk>/delete/', LeaveDeleteView.as_view(), name='delete-leave'),
