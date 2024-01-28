@@ -6,7 +6,7 @@ import datetime
 
 ### for debugging the additional instance of LeaveCounter when Leave.auto-approve() is called
 import logging
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('django')
 
 
 class LeaveType(models.Model):
@@ -53,7 +53,7 @@ class Leave(models.Model):
         # set status to "Approved" instead of "Pending" if both conditions are met
         if leaves_taken < workgroup.allowed_leaves_per_day and is_more_than_a_week:
             self.status = 'approved'
-            self.save()
+            # self.save()
 
     def save(self, *args, **kwargs):
         
