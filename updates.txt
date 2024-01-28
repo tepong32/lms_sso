@@ -1,16 +1,17 @@
 		TIP!
 		for future projects' password-change/reset things, see: https://docs.djangoproject.com/en/4.2/topics/auth/default/#module-django.contrib.auth.views
 
-		then you can actually just go to "env/site-packages/django/contrib/auth/templates/registration/" to copy or modify the templates directly (copying preferred. why? Think about it! ;)). No need to create new ones. LOL!
+		then you can actually just go to "env/site-packages/django/contrib/auth/templates/registration/" to copy or modify the templates directly. No need to create new ones. LOL!
+
+Duplicating working instances:
+	Initial migration: OK
+	Create superuser: OK
+	Create WorkGroups and assign a Manager and allowed_leaves_per_day to each
+		- these WorkGroups are needed for users sign-ups
 
 
-Initial migration: OK
-Create superuser: OK
-Create Managers
-Create WorkGroups and assign a Manager and allowed_leaves_per_day to each
-	- these WorkGroups are needed for users sign-ups
-Upon user creation, leave_counters are not automatically assigned to users which leads to an error when that user tries to send a Leave request
 
 
-
+Major Updates:
+Leave.auto-approve() now working as intended. Conditions: Still has cluster allocated counts remaining and request filed is >7 days from filing date. :)
 

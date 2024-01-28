@@ -2,7 +2,7 @@ Leaves already approved add counts to instances_used_this_year and instances_use
 	--- actually realized that this is a good FEATURE and should not be considered a BUG since "personal connection" to the TeamLeader can lead to illegal adjustments of leave credits.
 
 
-Will need to work on carrying-over un-used allowed_instances_per_quarter to the next quarter/s.
+
 
 Newly-registered accounts need to be inactive first. (requires admin-intervention to be able to login to the site)
 Registration needs to include bio/profile details for admin convenience in allowing which accounts to approve.
@@ -28,14 +28,39 @@ admin > groups >specific page for members of the leaveCounterAdjuster group
 
 
 
+work on profile display on dashboard_links.html:
+	displayed photo and name when in desktop view
+	hide when in mobile
+links to directly cancel leaves thru the home widgets (x) button
 
 
-leave model dapat may timestamp for displaying who filed the request first
-reference kung kailan nag-file
+
 handle the message notif for auto-approve leaves or leave statuses in the view (formview yata?)
 add display counts for allowed_leaves_per_day and remaining allowed_leaves_per_day
 check cluster allocation (daily):
 	pag meron + may ununsed_instances_per_quarter: auto-approved
 	hindi na lang naiimplement yung >7days prior to target date
 
-reset_counters() not triggering was because it cannot be automatically set thru django. It needs to be a CRON JOB.
+
+
+
+
+### USER
+
+Upon user creation, leave_counters are not automatically assigned to users which leads to an error when that user tries to send a Leave request
+	not sure if this is still the case as there's a method implemented on the model already. Just re-check.
+
+
+### HOME
+
+Might need to rename "employee" attr to "user" for universality. Do this kapag gagawa ka na ng bagong DB.
+
+LeaveCounter.reset_counters() and carry-over() still unchecked if working properly due to server-time testing constraints
+	reset_counters() not triggering was because it cannot be automatically set thru django. It needs to be a CRON JOB.
+	Will need to work on carrying-over un-used allowed_instances_per_quarter to the next quarter/s.
+
+LeaveCounter.carry_over(): for instances na mageexceed sa max_allowed_per_quarter ung allowed leaves, walang subtraction na mangyayari sa following-quarter
+	yung adjustments ay maiimplement na lang sa end-of-year thru validation ng max_allowed_per_year.
+	If this needs to change, code mods are needed. Kung wala namang issues or constraints, pwede nang hayaan.
+
+Leave.auto_approve(): dual-counts ang nangyayari pag auto-approved ang leave requests. Check auto_approve() and save() to see where the issue happens.
