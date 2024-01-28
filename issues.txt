@@ -63,4 +63,4 @@ LeaveCounter.carry_over(): for instances na mageexceed sa max_allowed_per_quarte
 	yung adjustments ay maiimplement na lang sa end-of-year thru validation ng max_allowed_per_year.
 	If this needs to change, code mods are needed. Kung wala namang issues or constraints, pwede nang hayaan.
 
-Leave.auto_approve(): dual-counts ang nangyayari pag auto-approved ang leave requests. Check auto_approve() and save() to see where the issue happens.
+LeaveCounter addition signal works, subtraction (upon leave cancellation or deletion) does not.
