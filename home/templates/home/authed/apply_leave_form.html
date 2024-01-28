@@ -31,7 +31,18 @@
     <div class="form-group">
       <button class="btn btn-success" type="submit">Submit request</button>
     </div>
-  </form>
+    <!-- Add the "Today" button for the start_date field -->
+    <button type="button" id="todayButton">Today</button>
+</form>
+
+<script>
+document.getElementById('todayButton').addEventListener('click', function() {
+    var today = new Date().toISOString().slice(0,10);
+    document.getElementById('id_start_date').value = today;
+    document.getElementById('id_end_date').value = today;
+});
+</script>
+
 </div>
 
 
