@@ -3,7 +3,10 @@ from django.utils import timezone
 from datetime import timedelta
 from users.models import User
 import datetime
-# import calendar
+
+### for debugging the additional instance of LeaveCounter when Leave.auto-approve() is called
+import logging
+logger = logging.getLogger(__name__)
 
 
 class LeaveType(models.Model):
@@ -33,18 +36,31 @@ class Leave(models.Model):
         return f"{self.employee} - {self.leave_type} ({self.status})"
 
     def auto_approve(self):
+
+        # dubugging logs
+        logger.info('auto_approve called')
+        logger.debug('Leave object: %s', self)
+
         # Get the WorkGroup of the employee
         workgroup = self.employee.workgroup
-
         # Get the number of leaves taken on the day the leave is filed
         leaves_taken = Leave.objects.filter(employee__workgroup=workgroup, start_date=self.start_date, status='approved').count()
+        # Get the current date
+        current_date = timezone.now().date()
+        # Check if the leave request is more than a week from the current date
+        is_more_than_a_week = (self.start_date - current_date) > timedelta(days=7)
 
-        # If the number of leaves taken is less than the allowed leaves per day, set the status to 'approved'
-        if leaves_taken < workgroup.allowed_leaves_per_day:
+        # set status to "Approved" instead of "Pending" if both conditions are met
+        if leaves_taken < workgroup.allowed_leaves_per_day and is_more_than_a_week:
             self.status = 'approved'
             self.save()
 
     def save(self, *args, **kwargs):
+        
+        # dubugging logs
+        logger.info('save called')
+        logger.debug('Leave object: %s', self)
+
         # Check if the status has changed to 'approved'
         if self.pk is not None:
             orig = Leave.objects.get(pk=self.pk)
@@ -127,7 +143,7 @@ class LeaveCounter(models.Model):
 
     def carry_over(self):
         '''
-        carry_over method will carry over the unused instances to the next quarter.
+        will carry-over the unused instances to the next quarter.
         current quarter is determined by calculating the quarter index based on the current month.
         '''
         now = timezone.localtime(timezone.now())
@@ -145,7 +161,7 @@ class LeaveCounter(models.Model):
 
     def reset_counters(self):
         '''
-        reset_counters method will reset the counters if the last reset date is less than the first day of the current quarter.
+        will reset the counters if the last reset date is less than the first day of the current quarter.
         current quarter is determined by calculating the quarter index based on the current month.
         '''
         now = timezone.localtime(timezone.now())
