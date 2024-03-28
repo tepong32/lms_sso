@@ -43,7 +43,7 @@ class HomeView(LoginRequiredMixin, TemplateView):
                 leave_counter = LeaveCounter.objects.get(employee=loggedin_user)
                 instances_used_this_year = leave_counter.instances_used_this_year
                 instances_used_this_quarter = leave_counter.instances_used_this_quarter
-                user_leaves = Leave.objects.filter(employee=loggedin_user)  # Filter the leaves of the current user
+                user_leaves = Leave.objects.filter(employee=loggedin_user)[::-1]  # Filter the leaves of the current user, latest first
             except LeaveCounter.DoesNotExist:
                 pass
 
